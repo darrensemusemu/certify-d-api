@@ -1,0 +1,40 @@
+@startuml c4_l1_context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!includeurl ICONURL/common.puml
+!includeurl ICONURL/font-awesome-5/users.puml
+!includeurl ICONURL/font-awesome/gears.puml
+
+title = System Landscape Diagram for Certify-d
+
+LAYOUT_WITH_LEGEND()
+
+Person(customer, "Customer", "A customer of the system, with intetions to certify documents")
+Person(company, "Company", "A registered company, with a commissioner of oaths",  $sprite="users")
+
+Enterprise_Boundary(c0, "Certify-d", $link="https://github.com/darrensemusemu/certify-d") {
+    Person(staff, "Staff", "Supports customers & companies",  $sprite="users")
+    System(certify_system, "Certify-d System", "Docuement certification system", $sprite="gears")
+    System_Ext(auth, "Auth Provider", "Identity & session management")
+}
+
+System_Ext(email, "Email Service", "Send email notification to users")
+System_Ext(sms, "SMS Service", "Send SMS email notifications to users")
+System_Ext(payment, "Payment Provider", "Integrated online payment gateway")
+
+Rel_R(customer, auth, "Provides credentials")
+Rel_R(customer, certify_system, "Uploads documents, initiates orders")
+Rel_R(customer, staff, "Asks for support")
+Rel_L(auth, certify_system,  "Fowards identity")
+Rel_D(staff, certify_system, "Adds/Removes companies")'
+Rel_D(certify_system, email, "Sends emails")
+Rel_D(certify_system, sms, "Sends sms's")
+BiRel(certify_system, payment, "Payment flow for order")
+Rel_R(company, certify_system, "Bids for uploads, approves/declines, stamp documents")
+
+Lay_R(staff, company)
+Lay_D(staff, auth)
+Lay_D(staff, certify_system)
+
+@enduml
