@@ -1,0 +1,13 @@
+{
+  "plantuml.diagramsRoot": "docs/diagrams/src",
+  "plantuml.exportOutDir": "docs/diagrams/out",
+  "plantuml.exportSubFolder": false,
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/ory/kratos/master/.schema/version.schema.json": "file:///home/darren/Documents/Github/certify-d/third_party/ory.kratos/config/config.yaml",
+    "kubernetes://schema/apps/v1@deployment": [
+      "file:///home/darren/Documents/Github/certify-d/third_party/ory.kratos/deploy.yaml",
+      "file:///home/darren/Documents/Github/certify-d/third_party/ory.oathkeeper/k8s.yaml"
+    ],
+    "https://raw.githubusercontent.com/deployphp/deployer/master/src/schema.json": "file:///home/darren/Documents/Github/certify-d/third_party/ory.oathkeeper/deploy.yml"
+  }
+}
