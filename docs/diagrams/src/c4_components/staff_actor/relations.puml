@@ -1,0 +1,6 @@
+@startuml staff_actor_relations
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Rel_D(staff_actor, certify_sys, "Adds/Removes companies")
+
+@enduml

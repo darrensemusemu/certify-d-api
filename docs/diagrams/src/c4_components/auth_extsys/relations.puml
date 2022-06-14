@@ -1,0 +1,8 @@
+@startuml auth_extsys_relations
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+!if ($level || $level == 1) 
+Rel_R(auth_extsys, certify_sys,  "Fowards identity")
+!endif
+
+@enduml

@@ -1,0 +1,6 @@
+@startuml sms_extsys_context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+System_Ext(sms_extsys, "SMS Service", "Send SMS email notifications to users")
+
+@enduml

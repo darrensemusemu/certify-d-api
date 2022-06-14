@@ -1,0 +1,8 @@
+@startuml customer_actor_relations
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Rel_R(customer_actor, auth_extsys, "Provides credentials")
+Rel_D(customer_actor, certify_sys, "Uploads documents, initiates orders")
+Rel_R(customer_actor, staff_actor, "Asks for support")
+
+@enduml

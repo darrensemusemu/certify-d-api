@@ -1,0 +1,6 @@
+@startuml customer_actor_context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(customer_actor, "Customer", "A customer with intetions to certify documents")
+
+@enduml

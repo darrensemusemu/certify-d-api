@@ -1,0 +1,10 @@
+@startuml certify_sys_relations
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+!if ($level || $level == 1) 
+Rel_D(certify_sys, email_extsys, "Sends emails")
+BiRel(certify_sys, payment_extsys, "Payment flows")
+Rel_D(certify_sys, sms_extsys, "Sends sms's using")
+!endif
+
+@enduml

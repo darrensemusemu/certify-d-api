@@ -1,0 +1,6 @@
+@startuml email_extsys_context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+System_Ext(email_extsys, "Email Service", "Send email notification to users")
+
+@enduml

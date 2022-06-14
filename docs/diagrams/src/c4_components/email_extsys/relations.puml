@@ -1,0 +1,4 @@
+@startuml email_extsys_relations
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+@enduml

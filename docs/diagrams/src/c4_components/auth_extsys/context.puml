@@ -1,0 +1,6 @@
+@startuml auth_extsys_context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+System_Ext(auth_extsys, "Auth Provider", "Identity & session management")
+
+@enduml

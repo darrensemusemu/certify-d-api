@@ -1,0 +1,6 @@
+@startuml staff_actor_context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(staff_actor, "Staff", "Supports customers & companies",  $sprite="users")
+
+@enduml
