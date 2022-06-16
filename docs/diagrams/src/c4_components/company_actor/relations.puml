@@ -1,7 +1,18 @@
 @startuml company_actor_relations
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
+' !$level =
+
+!if ($level == 1)
+
 Rel_R(company_actor, certify_sys, "Bids for approvals/declines, add employees")
 Rel_R(company_actor, auth_extsys, "Provides credentials")
+
+!elseif ($level == 2)
+
+Rel_D(company_actor, website_cont, "Visits certify-d.com")
+Rel_D(company_actor, company_webapp_cont, "Visits oaths.certify-d.com")
+
+!endif
 
 @enduml

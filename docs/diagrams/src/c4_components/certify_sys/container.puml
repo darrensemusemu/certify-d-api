@@ -1,0 +1,44 @@
+@startuml certify_sys_container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!includeurl ICONURL/common.puml
+!includeurl ICONURL/devicons2/go_line.puml
+!includeurl ICONURL/devicons2/nextjs_original_wordmark.puml
+!includeurl ICONURL/devicons2/nginx_original.puml
+!includeurl ICONURL/devicons2/postgresql.puml
+
+AddElementTag("microService", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="micro service (eight sided)")
+AddElementTag("storage", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="white")
+
+System_Boundary(certify_sys, "Certify-d System" ){
+    Container(website_cont, "Website", "NextJS, Typescript", "Delivers static content and infomartion on Certify-d services", $sprite="nextjs_original_wordmark")
+    Container(company_webapp_cont, "Company WebApp", "NextJS, Typescript", "Provides all company functionality through a web brower", $sprite="nextjs_original_wordmark")
+    Container(staff_webapp_cont, "Staff WebApp", "NextJS, Typescript", "Provides all staff/admin functionality through a web brower", $sprite="nextjs_original_wordmark")
+    Container(customer_webapp_cont, "Customer WebApp", "NextJS, Typescript", "Provides all customer functionality through a web brower", $sprite="nextjs_original_wordmark")
+    Container(apigateway_cont, "API Gateway", "Nginx", "Entry point for all internal services", $sprite="nginx_original")
+    Container(nats_server_cont, "NATS Server", "", "Provides a messaging system with exactly once message delivery")
+    Container(notifications_cont, "Notification Service", "Go", "Handles requests to send messeages to users", $sprite="go_line", $tags="microService")
+    ContainerDb(notifications_contdb, "Notification Database", "Postgres", "Stores notifications data", $sprite="postgresql", $tags="")
+    Container(bidding_cont, "Bidding Service", "Go", "Allows bidding/auction process for orders to companies", $sprite="go_line", $tags="microService")
+    ContainerDb(bidding_contdb, "Bidding Database", "Postgres", "Stores bidding data", $sprite="postgresql", $tags="")
+    Container(payment_cont, "Payment Service", "Go", "Provies users with transactions flow for payments", $sprite="go_line", $tags="microService")
+    ContainerDb(payment_contdb, "Payment Database", "Postgres", "Stores payment data", $sprite="postgresql", $tags="")
+    Container(certification_cont, "Certification Service", "Go", "Handle docs certification & docs stamping", $sprite="go_line", $tags="microService")
+    ContainerDb(certification_contdb, "Certification Database", "Postgres", "Stores certification data", $sprite="postgresql", $tags="")
+    Container(order_cont, "Order Service", "Go", "Allows for order creation and handling", $sprite="go_line", $tags="microService")
+    ContainerDb(order_contdb, "Order Database", "Postgres", "Stores order data", $sprite="postgresql", $tags="")
+    Container(upload_cont, "Upload Service", "Go", "Allows for document uploads", $sprite="go_line", $tags="microService")
+    ContainerDb(upload_contdb, "Upload Database", "Postgres", "Stores upload data", $sprite="postgresql", $tags="")
+    Container(upload_storage, "Upload Storage", "Postgres", "Stores upload data", $tags=$sprite="postgresql", $tags="storage")
+    Container(user_cont, "User Service", "Go", "Allows for user profile management", $sprite="go_line", $tags="microService")
+    ContainerDb(user_contdb, "User Database", "Postgres", "Stores user data", $sprite="postgresql", $tags="")
+    Container(company_cont, "Company Service", "Go", "Allows for company management", $sprite="go_line", $tags="microService")
+    ContainerDb(company_contdb, "Company Database", "Postgres", "Stores company data", $sprite="postgresql", $tags="")
+
+
+    ContainerDb(kratos_contdb, "Kratos Database", "Postgres", "Stores company data", $tags="")
+
+}
+
+@enduml

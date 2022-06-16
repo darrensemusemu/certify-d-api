@@ -8,11 +8,3 @@
 System(certify_sys, "Certify-d System", "Document certification system", $sprite="gears")
 
 @enduml
-
-' !if ($level == 2)
-'     System_Boundary(s1, "Certify-d System" ){
-'         Container(website, "Website", "NextJS, Typescript", "Delivers static content and infomartion on Certify-d services", $sprite="nextjs_original_wordmark")
-'         Container(webapp, "Web Application", "NextJS, Typescript", "Provides all Certify-d functionality through a web brower", $sprite="nextjs_original_wordmark")
-'         ' Container(api, "API Container", "Provices functionality through the use RESTful api's")
-'         ' ContainerDb(alias, "label", "technology")
-'     }

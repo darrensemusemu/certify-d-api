@@ -6,4 +6,5 @@ title = System Landscape Diagram for Certify-d
 
 !include c4_core.puml
 
+LAYOUT_WITH_LEGEND()
 @enduml

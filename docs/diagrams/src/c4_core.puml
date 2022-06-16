@@ -6,8 +6,6 @@
 !includeurl ICONURL/font-awesome-5/users.puml
 !includeurl ICONURL/font-awesome/gears.puml
 
-LAYOUT_WITH_LEGEND()
-
 !include c4_components/company_actor/context.puml
 !include c4_components/customer_actor/context.puml
 !include c4_components/email_extsys/context.puml
@@ -15,8 +13,14 @@ LAYOUT_WITH_LEGEND()
 !include c4_components/sms_extsys/context.puml
 
 Enterprise_Boundary(e0, "Certify-d", $link="https://github.com/darrensemusemu/certify-d") {
+    !if ($level == 1)
     !include c4_components/auth_extsys/context.puml
     !include c4_components/certify_sys/context.puml
+    !elseif ($level == 2)
+    !include c4_components/auth_extsys/container.puml
+    !include c4_components/certify_sys/container.puml
+    !endif
+
     !include c4_components/staff_actor/context.puml
 }
 

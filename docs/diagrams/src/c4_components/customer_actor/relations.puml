@@ -1,8 +1,19 @@
 @startuml customer_actor_relations
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
-Rel_R(customer_actor, auth_extsys, "Provides credentials")
-Rel_D(customer_actor, certify_sys, "Uploads documents, initiates orders")
 Rel_R(customer_actor, staff_actor, "Asks for support")
 
+' !$level =
+
+!if ($level == 1)
+
+Rel_R(customer_actor, auth_extsys, "Provides credentials")
+Rel_D(customer_actor, certify_sys, "Uploads documents, initiates orders")
+
+!elseif ($level == 2)
+
+Rel_D(customer_actor, website_cont, "Visits certify-d.com")
+Rel_D(customer_actor, customer_webapp_cont, "Visits app.certify-d.com")
+
+!endif
 @enduml

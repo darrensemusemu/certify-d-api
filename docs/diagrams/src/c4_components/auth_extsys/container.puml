@@ -1,0 +1,9 @@
+@startuml certify_sys_container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+System_Boundary(auth_extsys,"Auth Service"){
+    Container_Ext(kratos_extcont, "Ory Kratos", "", "Allows for user identity management & session management", $sprite="", $tags="")
+    Container_Ext(oathkeeper_extcont, "Ory Oathkeeper", "", "Authenticates, authorize & mutates HTTP requests", $sprite="", $tags="")
+}
+
+@enduml

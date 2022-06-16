@@ -1,10 +1,63 @@
 @startuml certify_sys_relations
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
-!if ($level || $level == 1) 
+' !$level =
+
+!if ($level == 1) 
+
 Rel_D(certify_sys, email_extsys, "Sends emails")
 BiRel(certify_sys, payment_extsys, "Payment flows")
 Rel_D(certify_sys, sms_extsys, "Sends sms's using")
+
+!elseif($level == 2)
+
+Rel_L(website_cont, company_webapp_cont, "Sends to")
+Rel_R(website_cont, customer_webapp_cont, "Sends to")
+Rel_D(notifications_cont, notifications_contdb, "Stores in")
+Rel_D(bidding_cont, bidding_contdb, "Stores in")
+Rel_D(payment_cont, payment_contdb, "Stores in")
+Rel_D(certification_cont, certification_contdb, "Stores in")
+Rel_D(order_cont, order_contdb, "Stores in")
+Rel_D(upload_cont, upload_contdb, "Stores in")
+Rel_D(upload_cont, upload_storage, "Stores in")
+Rel_D(user_cont, user_contdb, "Stores in")
+Rel_D(company_cont, company_contdb, "Stores in")
+Rel_U(nats_server_cont, order_cont, "Payment events")
+Rel_D(order_cont, nats_server_cont, "Order events")
+Rel_D(order_cont, apigateway_cont, "Order events", $techn="Websockets")
+Rel_D(bidding_cont, apigateway_cont, "Bidding events", $techn="Websockets")
+Rel_D(payment_cont, nats_server_cont, "Payment events")
+Rel_U(nats_server_cont, bidding_cont, "Order events")
+Rel_U(nats_server_cont, notifications_cont, "Notifications events")
+Rel_R(certification_cont, upload_cont, "Uploads files", $techn="JSON/HTTP")
+Rel_D(customer_webapp_cont, apigateway_cont, "Profile settings")
+Rel_D(customer_webapp_cont, apigateway_cont, "Uploads files")
+Rel_D(customer_webapp_cont, apigateway_cont, "Payment transacts")
+Rel_D(customer_webapp_cont, apigateway_cont, "Places orders")
+
+Rel_D(company_webapp_cont, apigateway_cont, "Registers company")
+Rel_D(company_webapp_cont, apigateway_cont, "Certifies docs")
+Rel_D(company_webapp_cont, apigateway_cont, "Bids for uploads")
+Rel_R(company_webapp_cont, apigateway_cont, "Adds employees")
+Rel_D(staff_webapp_cont, apigateway_cont, "Adds companies")
+Rel_U(apigateway_cont, customer_webapp_cont, "Order events", $techn="Websockets")
+Rel_U(apigateway_cont, company_webapp_cont, "Bidding events", $techn="Websockets")
+Rel_D(apigateway_cont, bidding_cont, "Bidding requests", $techn="JSON/HTTP")
+Rel_D(apigateway_cont, certification_cont, "Certification requests", $techn="JSON/HTTP")
+Rel_D(apigateway_cont, company_cont, "Company requests", $techn="JSON/HTTP")
+Rel_D(apigateway_cont, payment_cont, "Payment requests", $techn="JSON/HTTP")
+Rel_D(apigateway_cont, order_cont, "Order requests", $techn="JSON/HTTP")
+Rel_D(apigateway_cont, upload_cont, "Upload requests", $techn="JSON/HTTP")
+Rel_D(apigateway_cont, user_cont, "User requests", $techn="JSON/HTTP")
+Rel_D(apigateway_cont, notifications_cont, "Notifications requests", $techn="JSON/HTTP")
+Rel_D(apigateway_cont, kratos_extcont, "Identity Management", $techn="JSON/HTTP")
+Rel_L(apigateway_cont, oathkeeper_extcont, "Access control decisions")
+Rel_D(notifications_cont, email_extsys, "Sends email to")
+Rel_D(notifications_cont, sms_extsys, "Sends email to")
+BiRel(payment_cont, payment_extsys, "Payment flows")
+Lay_R(staff_webapp_cont, company_webapp_cont)
+Lay_U(nats_server_cont, order_contdb)
+
 !endif
 
 @enduml

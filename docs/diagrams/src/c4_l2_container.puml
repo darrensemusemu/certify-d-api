@@ -1,0 +1,14 @@
+@startuml c4_l2_container
+
+title = System Container Diagram for Certify-d
+
+!$level = 2
+
+!include c4_core.puml
+
+Lay_D(payment_extsys, sms_extsys)
+Lay_D(payment_extsys, email_extsys)
+Lay_D(sms_extsys, email_extsys)
+
+LAYOUT_WITH_LEGEND()
+@enduml
