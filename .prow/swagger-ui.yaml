@@ -36,43 +36,7 @@ presubmits:
           secret:
             secretName: scaffold-service-account
       restartPolicy: Always
-    branches: []
-    skip_branches: []
+    # branches: []z
+    # skip_branches: []
     # trigger: "(?m)qux test this( please)?"
     # rerun_command: "qux test this please"
-
-apiVersion: v1
-kind: Pod
-metadata:
-  name: "MYAPP"
-  namespace: default
-  labels:
-    app: "MYAPP"
-spec:
-  containers:
-    - name: MYAPP
-      image: "debian-slim:latest"
-      resources:
-        limits:
-          cpu: 200m
-          memory: 500Mi
-        requests:
-          cpu: 100m
-          memory: 200Mi
-      env:
-        - name: DB_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: MYAPP
-              key: DB_HOST
-      ports:
-        - containerPort: 80
-          name: http
-      volumeMounts:
-        - name: localtime
-          mountPath: /etc/localtime
-  volumes:
-    - name: localtime
-      hostPath:
-        path: /usr/share/zoneinfo/Asia/Shanghai
-  restartPolicy: Always
