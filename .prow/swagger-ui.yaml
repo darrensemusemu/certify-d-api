@@ -3,6 +3,7 @@ presubmits:
   # postsubmits:
   - name: swagger-ui-deploy
     decorate: true
+    clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
     always_run: true
     run_if_changed: "/.*\/openapi-spec\/.*(.yaml|.yml|Dockerfile)|.prow\/swagger-ui.yaml$"
     skip_report: false
