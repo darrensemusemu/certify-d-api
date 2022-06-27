@@ -1,4 +1,4 @@
-postsubmits:
+presubmits:
   # - name: openapi-spec-validate
   # postsubmits:
   - name: swagger-ui-deploy
@@ -19,7 +19,7 @@ postsubmits:
           #     gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
           #     kubectl config get-contexts
           env:
-            - name: $CLUSTER_DEV_NAME
+            - name: CLUSTER_DEV_NAME
               value:  main-cluster
           resources:
             limits:
