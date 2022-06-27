@@ -11,11 +11,11 @@ postsubmits:
         - name: skaffold
           image: "gcr.io/k8s-skaffold/skaffold:v1.38.0"
           command: ["/bin/sh", "-c"]
-          # args:
-          #   - |
-          #     gcloud auth activate-service-account --key-file=/secrets/scaffold-service-account.json &&
-          #     gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
-          #     kubectl config get-contexts
+          args:
+            - |
+              gcloud auth activate-service-account --key-file=/secrets/scaffold-service-account.json &&
+              gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
+              kubectl config get-contexts
           env:
             - name: CLUSTER_DEV_NAME
               value:  main-cluster
