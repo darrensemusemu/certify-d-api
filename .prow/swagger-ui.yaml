@@ -13,10 +13,15 @@ presubmits:
           command: ["/bin/sh", "-c"]
           args:
             - |
+              echo "one" &&
               gcloud auth activate-service-account --key-file=/secrets/skaffold-service-account.json &&
+              echo "one" &&
               gcloud config set project $PROJECT_DEV_NAME &&
+              echo "one" &&
               gcloud config set compute/zone $PROJECT_DEV_REGION && 
+              echo "one" &&
               gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
+              echo "one" &&
               kubectl config get-contexts
           env:
             - name: CLUSTER_DEV_NAME
