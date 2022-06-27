@@ -1,0 +1,42 @@
+postsubmits:
+  # - name: openapi-spec-validate
+  # postsubmits:
+  - name: swagger-ui-deploy
+    decorate: true
+    clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
+    always_run: true
+    skip_report: false
+    context: swagger-ui
+    max_concurrency: 1
+    spec:
+      containers:
+        - name: skaffold
+          image: "gcr.io/k8s-skaffold/skaffold:v1.38.0"
+          command: ["/bin/sh", "-c"]
+          # args:
+          #   - |
+          #     gcloud auth activate-service-account --key-file=/secrets/scaffold-service-account.json &&
+          #     gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
+          #     kubectl config get-contexts
+          env:
+            - name: $CLUSTER_DEV_NAME
+              value:  main-cluster
+          resources:
+            limits:
+              cpu: 64m
+              memory: 100Mi
+            requests:
+              cpu: 64m
+              memory: 100Mi
+          volumeMounts:
+            - name: service-account
+              mountPath: /secrets
+      volumes:
+        - name: service-account
+          secret:
+            secretName: scaffold-service-account
+      restartPolicy: Always
+    # branches: []z
+    # skip_branches: []
+    # trigger: "(?m)qux test this( please)?"
+    # rerun_command: "qux test this please"

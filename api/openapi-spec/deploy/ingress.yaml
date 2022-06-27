@@ -1,0 +1,36 @@
+# https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: swagger-ui
+  namespace: certify-d-dev
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /swagger/$2
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - certify-d.darrensemusemu.dev
+      secretName: letsencrypt-prod-cluster
+  rules:
+    - host: certify-d.darrensemusemu.dev
+      http:
+        paths:
+          - path: /api/swagger(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: swagger-ui
+                port:
+                  name: http
+    - host: localhost
+      http:
+        paths:
+          - path: /api/swagger(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: swagger-ui
+                port:
+                  name: http

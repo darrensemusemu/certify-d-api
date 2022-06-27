@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger-ui
+  namespace: certify-d-dev
+  labels:
+    app: swagger-ui
+spec:
+  selector:
+    matchLabels:
+      app: swagger-ui
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: swagger-ui
+    spec:
+      containers:
+        - name: swagger-ui
+          image:  europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/swagger-ui
+          resources:
+            requests:
+              cpu: 64m
+              memory: 64Mi
+            limits:
+              cpu: 64m
+              memory: 64Mi
+          readinessProbe:
+            httpGet:
+              path: /swagger/index.html
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 30
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: BASE_URL
+              value: /swagger
+      restartPolicy: Always

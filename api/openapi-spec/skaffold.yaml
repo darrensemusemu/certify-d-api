@@ -1,0 +1,34 @@
+apiVersion: skaffold/v2beta28
+kind: Config
+metadata:
+  name: swagger-ui
+build:
+  artifacts:
+    - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/swagger-ui
+      context: .
+      docker:
+        dockerfile: Dockerfile
+  local:
+    push: false
+deploy:
+  kubectl:
+    manifests:
+      - deploy/*.yaml
+profiles:
+  - name: prod
+    build:
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+          variant: AbbrevCommitSha
+      artifacts:
+      - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/swagger-ui
+        context: .
+        docker:
+          cacheFrom:
+            # googleCloudBuild replaces cache references to the artifact image with
+            # the tagged image reference, useful for caching from the previous build.
+            - europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/swagger-ui
+      googleCloudBuild:
+        projectId: darrensemusemu-infra
+      
