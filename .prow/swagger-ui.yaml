@@ -18,7 +18,7 @@ postsubmits:
               kubectl config get-contexts && 
               export STATE=$(git rev-list -1 HEAD --abbrev-commit) &&
               skaffold build -p prod -m $SERVICE_NAME --file-output build-$STATE.json &&
-              skaffold deploy -p prod  -m $SERVICE_NAME  -a build-$STATE.json
+              skaffold deploy -m $SERVICE_NAME  -a build-$STATE.json
           env:
             - name: CLUSTER_DEV_NAME
               value: main-cluster
