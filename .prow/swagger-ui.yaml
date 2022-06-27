@@ -5,7 +5,7 @@ presubmits:
     decorate: true
     clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
     always_run: true
-    # run_if_changed: "/.*\/openapi-spec\/.*(.yaml|.yml|Dockerfile)|.prow\/swagger-ui.yaml$"
+    run_if_changed: ".*/openapi-spec/.*(.yaml|.yml|Dockerfile)|.prow/swagger-ui.yaml$"
     skip_report: false
     context: swagger-ui
     max_concurrency: 1
@@ -14,11 +14,11 @@ presubmits:
         - name: skaffold
           image: "gcr.io/k8s-skaffold/skaffold:v1.38.0"
           command: ["/bin/sh", "-c"]
-          args:
-            - |
-              gcloud auth activate-service-account --key-file=/secrets/scaffold-service-account.json &&
-              gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
-              kubectl config get-contexts
+          # args:
+          #   - |
+          #     gcloud auth activate-service-account --key-file=/secrets/scaffold-service-account.json &&
+          #     gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
+          #     kubectl config get-contexts
           env:
             - name: $CLUSTER_DEV_NAME
               value:  main-cluster
