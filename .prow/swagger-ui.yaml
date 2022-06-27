@@ -14,13 +14,17 @@ presubmits:
           args:
             - |
               gcloud auth activate-service-account --key-file=/secrets/skaffold-service-account.json &&
+              gcloud config set project $PROJECT_DEV_NAME &&
+              gcloud config set compute/zone $PROJECT_DEV_REGION && 
               gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
-              kubectl config get-contexts && 
-              export STATE=$(git rev-list -1 HEAD --abbrev-commit) &&
-              skaffold build -p prod -m $SERVICE_NAME --file-output build-$STATE.json
+              kubectl config get-contexts
           env:
             - name: CLUSTER_DEV_NAME
               value: main-cluster
+            - name: PROJECT_DEV_NAME
+              value: darrensemusemu-infra
+            - name: PROJECT_DEV_REGION
+              value: europe-west1-b
             - name: SERVICE_NAME
               value: swagger-ui
           resources:
