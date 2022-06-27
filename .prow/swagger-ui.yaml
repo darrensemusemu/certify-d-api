@@ -1,6 +1,4 @@
-presubmits:
-  # - name: openapi-spec-validate
-  # postsubmits:
+postsubmits:
   - name: swagger-ui-deploy
     decorate: true
     clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
