@@ -17,13 +17,13 @@ postsubmits:
               gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
               kubectl config get-contexts && 
               export STATE=$(git rev-list -1 HEAD --abbrev-commit) &&
-              skaffold build -m $SERVICE_NAME --file-output build-$STATE.json &&
-              skaffold deploy -m $SERVICE_NAME  -a build-$STATE.json
+              skaffold build -p prod -m $SERVICE_NAME --file-output build-$STATE.json &&
+              skaffold deploy -p prod  -m $SERVICE_NAME  -a build-$STATE.json
           env:
             - name: CLUSTER_DEV_NAME
-              value:  main-cluster
+              value: main-cluster
             - name: SERVICE_NAME
-              value:  swagger-ui
+              value: swagger-ui
           resources:
             limits:
               cpu: 64m
