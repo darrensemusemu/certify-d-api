@@ -1,4 +1,4 @@
-presubmits:
+postsubmits:
   # - name: openapi-spec-validate
   # postsubmits:
   - name: swagger-ui-deploy
