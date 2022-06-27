@@ -42,4 +42,4 @@ postsubmits:
     # branches: []z
     # skip_branches: []
     # trigger: "(?m)qux test this( please)?"
-    # rerun_command: "qux test this please"
+
