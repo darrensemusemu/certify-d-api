@@ -17,10 +17,7 @@ presubmits:
               gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
               kubectl config get-contexts && 
               export STATE=$(git rev-list -1 HEAD --abbrev-commit) &&
-              skaffold build -p prod -m $SERVICE_NAME --file-output build-$STATE.json &&
-              echo "HERE &&"
-              cat  build-$STATE.json &&
-              skaffold deploy  -a build-$STATE.json -m $SERVICE_NAME 
+              skaffold build -p prod -m $SERVICE_NAME --file-output build-$STATE.json
           env:
             - name: CLUSTER_DEV_NAME
               value: main-cluster
