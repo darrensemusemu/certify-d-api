@@ -1,8 +1,7 @@
 apiVersion: skaffold/v2beta28
 kind: Config
-# metadata:
-#   name: certify-d-api
-
+metadata:
+  name: swagger-ui
 build:
   artifacts:
     - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/swagger-ui
