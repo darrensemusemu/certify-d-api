@@ -1,4 +1,4 @@
-postsubmits:
+presubmits:
   - name: swagger-ui-deploy
     decorate: true
     clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
