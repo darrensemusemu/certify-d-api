@@ -40,11 +40,11 @@ presubmits:
               value: /secrets/skaffold-service-account.json  
           resources:
             limits:
-              cpu: 64m
-              memory: 100Mi
+              cpu: 100m
+              memory: 128Mi
             requests:
-              cpu: 64m
-              memory: 100Mi
+              cpu: 500m
+              memory: 256Mi
           volumeMounts:
             - name: service-account
               mountPath: /secrets
