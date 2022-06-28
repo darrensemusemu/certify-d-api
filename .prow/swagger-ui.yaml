@@ -25,7 +25,7 @@ presubmits:
               export STATE=$(git rev-list -1 HEAD --abbrev-commit) 
               echo $STATE &&
               cd api/openapi-spec &&
-              cat a.json | grep  client_email && 
+              cat build-$STATE.json | grep  client_email && 
               ls -la &&
               skaffold build -p prod --file-output build-$STATE.json
           env:
