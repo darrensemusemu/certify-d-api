@@ -3,7 +3,7 @@ presubmits:
     decorate: true
     clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
     run_if_changed: "((api\/openapi-spec\/.*)|(\.prow\/swagger[-]ui\.yaml))$"
-    always_run: true
+    always_run: false
     skip_report: false
     context: swagger-ui
     max_concurrency: 1
