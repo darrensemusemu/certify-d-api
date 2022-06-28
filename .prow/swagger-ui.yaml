@@ -15,9 +15,7 @@ presubmits:
             - |
               echo "one" &&
               gcloud auth list &&
-              gcloud auth activate-service-account --key-file=/secrets/skaffold-service-account.json &&
-              echo "one" &&
-              gcloud auth list 
+              gcloud alpha storage ls 
           env:
             - name: CLUSTER_DEV_NAME
               value: main-cluster
