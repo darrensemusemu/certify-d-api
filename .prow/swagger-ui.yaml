@@ -20,7 +20,13 @@ presubmits:
               echo "one" &&
               gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
               echo "one" &&
-              kubectl config get-contexts
+              kubectl config get-contexts && 
+              echo "two" &&
+              export STATE=$(git rev-list -1 HEAD --abbrev-commit) 
+              echo $STATE &&
+              cd api/openapi-spec &&
+              ls -la &&
+              skaffold build -p prod --file-output build-$STATE.json
           env:
             - name: CLUSTER_DEV_NAME
               value: main-cluster
