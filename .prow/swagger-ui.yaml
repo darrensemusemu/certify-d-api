@@ -13,7 +13,7 @@ presubmits:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              echo "one" &&
+              echo "one" && 
               gcloud auth activate-service-account --key-file=/secrets/skaffold-service-account.json &&
               echo "one" &&
               gcloud config set project $PROJECT_DEV_NAME &&
@@ -22,12 +22,11 @@ presubmits:
               echo "one" &&
               kubectl config get-contexts && 
               echo "two" &&
-              export STATE=$(git rev-list -1 HEAD --abbrev-commit) 
-              echo $STATE &&
-              cd api/openapi-spec &&
+              export STATE=$(git rev-list -1 HEAD --abbrev-commit) &&  
               cat /secrets/skaffold-service-account.json  | grep  client_email && 
-              ls -la &&
-              skaffold build -p prod --file-output build-$STATE.json
+              skaffold build -m $SERVICE_NAME -p prod --file-output build-$STATE.json &&
+              echo "three" &&
+              skaffold deploy -m $SERVICE_NAME -a build-$STATE.json
           env:
             - name: CLUSTER_DEV_NAME
               value: main-cluster
