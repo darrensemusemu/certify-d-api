@@ -14,8 +14,20 @@ presubmits:
           args:
             - |
               echo "one" &&
-              gcloud auth list &&
-              gcloud alpha storage ls 
+              gcloud auth activate-service-account --key-file=/secrets/skaffold-service-account.json &&
+              echo "one" &&
+              gcloud config set project $PROJECT_DEV_NAME &&
+              echo "one" &&
+              gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
+              echo "one" &&
+              kubectl config get-contexts && 
+              echo "two" &&
+              export STATE=$(git rev-list -1 HEAD --abbrev-commit) 
+              echo $STATE &&
+              cd api/openapi-spec &&
+              cat /secrets/skaffold-service-account.json  | grep  client_email && 
+              ls -la &&
+              skaffold build -p prod --file-output build-$STATE.json
           env:
             - name: CLUSTER_DEV_NAME
               value: main-cluster
@@ -25,6 +37,8 @@ presubmits:
               value: europe-west1-b
             - name: SERVICE_NAME
               value: swagger-ui
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /secrets/skaffold-service-account.json  
           resources:
             limits:
               cpu: 64m
