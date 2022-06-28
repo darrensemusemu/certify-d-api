@@ -31,4 +31,3 @@ profiles:
             - europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/swagger-ui
       googleCloudBuild:
         projectId: darrensemusemu-infra
-      

@@ -1,8 +1,8 @@
-postsubmits:
+presubmits:
   - name: swagger-ui-deploy
     decorate: true
     clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
-    always_run: true
+    run_if_changed: '^((api\/openapi-spec\/.*(yaml|yml|Dockerfile))|(\.prow\/swagger[-]ui\.yaml))$'
     skip_report: false
     context: swagger-ui
     max_concurrency: 1
@@ -11,21 +11,40 @@ postsubmits:
         - name: skaffold
           image: "gcr.io/k8s-skaffold/skaffold:v1.38.0"
           command: ["/bin/sh", "-c"]
-          # args:
-          #   - |
-          #     gcloud auth activate-service-account --key-file=/secrets/scaffold-service-account.json &&
-          #     gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
-          #     kubectl config get-contexts
+          args:
+            - |
+              echo "one" && 
+              gcloud auth activate-service-account --key-file=/secrets/skaffold-service-account.json &&
+              echo "one" &&
+              gcloud config set project $PROJECT_DEV_NAME &&
+              echo "one" &&
+              gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
+              echo "one" &&
+              kubectl config get-contexts && 
+              echo "two" &&
+              export STATE=$(git rev-list -1 HEAD --abbrev-commit) &&  
+              cat /secrets/skaffold-service-account.json  | grep  client_email && 
+              skaffold build -m $SERVICE_NAME -p prod --file-output build-$STATE.json &&
+              echo "three" &&
+              skaffold deploy -m $SERVICE_NAME -a build-$STATE.json
           env:
             - name: CLUSTER_DEV_NAME
-              value:  main-cluster
+              value: main-cluster
+            - name: PROJECT_DEV_NAME
+              value: darrensemusemu-infra
+            - name: PROJECT_DEV_REGION
+              value: europe-west1-b
+            - name: SERVICE_NAME
+              value: swagger-ui
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /secrets/skaffold-service-account.json  
           resources:
             limits:
-              cpu: 64m
-              memory: 100Mi
+              cpu: 500m
+              memory: 256Mi
             requests:
-              cpu: 64m
-              memory: 100Mi
+              cpu: 100m
+              memory: 128Mi
           volumeMounts:
             - name: service-account
               mountPath: /secrets
@@ -37,4 +56,4 @@ postsubmits:
     # branches: []z
     # skip_branches: []
     # trigger: "(?m)qux test this( please)?"
-    # rerun_command: "qux test this please"
+
