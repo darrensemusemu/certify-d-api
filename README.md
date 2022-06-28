@@ -6,4 +6,4 @@ A document ceritifcation platform.
 
 [Architecture](docs/Architecture.md)
 
-Read more
+Read more a
