@@ -1,0 +1,10 @@
+repositories:
+  - name: ory
+    url: https://k8s.ory.sh/helm/charts
+
+releases:
+  - chart: ory/kratos
+    name: kratos-customer
+    namespace: certify-d-dev
+    values:
+      - kratos-customer.yaml
