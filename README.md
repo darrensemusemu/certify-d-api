@@ -6,4 +6,6 @@ A document ceritifcation platform.
 
 [Architecture](docs/Architecture.md)
 
-Read more a
+[Swagger UI](https://certify-d.darrensemusemu.dev/api/swagger/index.html)
+
+Read more
