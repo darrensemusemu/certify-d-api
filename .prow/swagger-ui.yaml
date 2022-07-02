@@ -1,4 +1,4 @@
-presubmits:
+postsubmits:
   - name: swagger-ui-deploy
     decorate: true
     clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
@@ -13,19 +13,12 @@ presubmits:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              echo "one" && 
               gcloud auth activate-service-account --key-file=/secrets/skaffold-service-account.json &&
-              echo "one" &&
               gcloud config set project $PROJECT_DEV_NAME &&
-              echo "one" &&
               gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
-              echo "one" &&
               kubectl config get-contexts && 
-              echo "two" &&
               export STATE=$(git rev-list -1 HEAD --abbrev-commit) &&  
-              cat /secrets/skaffold-service-account.json  | grep  client_email && 
               skaffold build -m $SERVICE_NAME -p prod --file-output build-$STATE.json &&
-              echo "three" &&
               skaffold deploy -m $SERVICE_NAME -a build-$STATE.json
           env:
             - name: CLUSTER_DEV_NAME
@@ -37,7 +30,7 @@ presubmits:
             - name: SERVICE_NAME
               value: swagger-ui
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /secrets/skaffold-service-account.json  
+              value: /secrets/skaffold-service-account.json
           resources:
             limits:
               cpu: 500m
@@ -53,7 +46,7 @@ presubmits:
           secret:
             secretName: scaffold-service-account
       restartPolicy: Always
-    # branches: []z
-    # skip_branches: []
-    # trigger: "(?m)qux test this( please)?"
-
+    branches:
+      - main
+    skip_branches: []
+    
