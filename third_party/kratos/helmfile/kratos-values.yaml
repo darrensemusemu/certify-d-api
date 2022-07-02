@@ -20,8 +20,8 @@ image:
   # imagePullPolicy: Always
 
 imagePullSecrets: []
-nameOverride: "kratos-customer"
-fullnameOverride: "kratos-customer"
+nameOverride: ""
+fullnameOverride: ""
 
 service:
   admin:
@@ -55,7 +55,7 @@ secret:
   # -- switch to false to prevent creating the secret
   enabled: false
   # -- Provide custom name of existing secret, or custom name of secret to be created
-  nameOverride: "kratos-customer-secret"
+  nameOverride: "kratos-secret"
   # nameOverride: "myCustomSecret"
   # -- Annotations to be added to secret. Annotations are added only when secret is being created. Existing secret will not be modified.
   secretAnnotations:
@@ -95,11 +95,11 @@ ingress:
     hosts:
       - host: certify-d.darrensemusemu.dev
         paths:
-          - path: /api/kratos/customer(/|$)(.*)
+          - path: /api/kratos/public(/|$)(.*)
             pathType: Prefix
       - host: localhost
         paths:
-          - path: /api/kratos/customer(/|$)(.*)
+          - path: /api/kratos/public(/|$)(.*)
             pathType: Prefix
     tls:
       - hosts:
@@ -286,7 +286,7 @@ deployment:
       valueFrom:
         secretKeyRef:
           key: smtpConnectionURI
-          name: kratos-customer-secret
+          name: kratos-secret
           optional: true
   # -- If you want to mount external volume
   # For example, mount a secret containing Certificate root CA to verify database

@@ -4,7 +4,7 @@ repositories:
 
 releases:
   - chart: ory/kratos
-    name: kratos-customer
+    name: kratos
     namespace: certify-d-dev
     values:
-      - kratos-customer.yaml
+      - kratos-values.yaml
