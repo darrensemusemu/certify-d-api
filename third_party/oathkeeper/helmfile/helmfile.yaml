@@ -1,0 +1,15 @@
+repositories:
+  - name: ory
+    url: https://k8s.ory.sh/helm/charts
+
+releases:
+  - chart: ory/oathkeeper
+    name: oathkeeper
+    namespace: certify-d-dev
+    values:
+      - oathkeeper-values.yaml
+    set:
+      - name: oathkeeper.mutatorIdTokenJWKs
+        file: id_token.jwks.json
+      - name: oathkeeper.accessRules
+        file: oathkeeper-access-rules.yaml
