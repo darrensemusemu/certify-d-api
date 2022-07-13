@@ -93,7 +93,7 @@ ingress:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
-      - host: localhost
+      - host: certify-d.darrensemusemu.dev
         paths:
           - path: /api/kratos/public(/|$)(.*)
             pathType: Prefix
@@ -103,6 +103,7 @@ ingress:
             pathType: Prefix
     tls:
       - hosts:
+          - certify-d.darrensemusemu.dev
           - localhost
         secretName: letsencrypt-prod-cluster
 kratos:
