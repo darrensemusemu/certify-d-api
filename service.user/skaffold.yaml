@@ -1,0 +1,36 @@
+apiVersion: skaffold/v2beta28
+kind: Config
+metadata:
+  name: service.user
+build:
+  artifacts:
+    - image: docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
+      context: .
+      docker:
+        dockerfile: build/Dockerfile
+        buildArgs:
+          BINARY_NAME: restapi
+          GIT_SSH_KEY_PATH: build/keys/git_ed25519
+  local:
+    push: false
+deploy:
+  kubectl:
+    manifests:
+      - deploy/k8s/*.yaml
+profiles:
+  - name: prod
+    build:
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+          variant: AbbrevCommitSha
+      artifacts:
+        - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
+          context: .
+          docker:
+            cacheFrom:
+              # googleCloudBuild replaces cache references to the artifact image with
+              # the tagged image reference, useful for caching from the previous build.
+              - europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
+      googleCloudBuild:
+        projectId: darrensemusemu-infra
