@@ -213,6 +213,7 @@ kratos:
         cors:
           enabled: true
           allowed_origins:
+            - "https://certify-d.darrensemusemu.dev"
             - "http://localhost:4200"
             - "http://localhost:4201"
             - "https://localhost:4201"
