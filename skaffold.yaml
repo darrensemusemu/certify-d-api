@@ -4,3 +4,8 @@ metadata:
   name: certify-d-api
 requires:
   - path: ./api/openapi-spec
+  - path: ./service.user
+deploy:
+  kubectl:
+    manifests:
+      - "conf/k8s/secrets/scaffold-service-account.yaml"
