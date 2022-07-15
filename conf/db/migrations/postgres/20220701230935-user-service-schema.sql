@@ -1,3 +1,4 @@
+
 -- +migrate Up
 -- add user_service user and schema
 CREATE USER user_service WITH PASSWORD 'user_service';
