@@ -1,3 +1,4 @@
+
 -- +migrate Up
 -- add kratos customer user and schema
 CREATE USER kratos_customer WITH PASSWORD 'kratos_customer';

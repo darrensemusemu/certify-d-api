@@ -8,9 +8,18 @@ import (
 
 	"github.com/darrensemusemu/certify-d-api/common/pkg/middleware/jwt"
 	"github.com/go-chi/chi/v5"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 func main() {
+	// ctx := context.Background()
+
+	os.Setenv("XDG_CONFIG_HOME", "../../sqlbioler.toml")
+	// connString := "postgres://user_service:user_service@localhost:5432/certify_d"
+	// db, err := sql.Open("pgx", connString)
+	// if err != nil {
+	// 	panic(err)
+	// }
 	r := chi.NewRouter()
 	os.Setenv(jwt.EnvVarJWKSUrl, "http://oathkeeper-api:4456/.well-known/jwks.json")
 
