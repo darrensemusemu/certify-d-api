@@ -24,15 +24,15 @@ func (s service) Add(user User) error {
 	if user.ID == "" || user.Role == "" {
 		return fmt.Errorf("add user err: id/role not provided")
 	}
-	err := s.r.Add(user)
+	err := s.r.AddUser(user)
 	return err
 }
 
 // Handle updating user in repository
 func (s service) Update(user User) error {
 	if user.ID == "" || user.Role == "" {
-		return fmt.Errorf("update user err: role not provided")
+		return fmt.Errorf("update user err: id/role not provided")
 	}
-	err := s.r.Add(user)
+	err := s.r.UpdateUser(user)
 	return err
 }
