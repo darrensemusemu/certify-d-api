@@ -36,11 +36,24 @@ func TestServiceAdd(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := svc.Add(tt.User)
-			t.Log(err)
 			is.True(tt.expectErr == (err != nil))
 		})
 	}
+}
 
+func TestServiceUpdate(t *testing.T) {
+	is := is.New(t)
+
+	testRepo := R{}
+	svc, err := user.NewService(testRepo)
+	is.NoErr(err)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := svc.Update(tt.User)
+			is.True(tt.expectErr == (err != nil))
+		})
+	}
 }
 
 var tests = []struct {
