@@ -1,4 +1,4 @@
 /*
-* Package  implements user related services
+* Package implements user related services
  */
 package user
