@@ -47,7 +47,24 @@ ALTER TABLE "user_service"."role_permission" ADD FOREIGN KEY ("role_id") REFEREN
 ALTER TABLE "user_service"."role_permission" ADD FOREIGN KEY ("permission_id") REFERENCES "user_service"."permission" ("id");
 
 -- Seed values
-INSERT INTO "user_service"."role" ("slug") VALUES('customer');
+-- +migrate StatementBegin
+DO $$ 
+DECLARE 
+  tester_role_id uuid;
+  super_admin_id uuid;
+  admin_id uuid;
+BEGIN
+  INSERT INTO "user_service"."role" ("slug") VALUES('customer');
+  INSERT INTO "user_service"."role" ("slug") VALUES('tester') RETURNING id into tester_role_id;
+
+  INSERT INTO "user_service"."permission" ("slug") VALUES('super_admin') RETURNING id into super_admin_id;
+  INSERT INTO "user_service"."permission" ("slug") VALUES('admin') RETURNING id into admin_id;
+
+  INSERT INTO "user_service"."role_permission" ("role_id", "permission_id") VALUES(tester_role_id, super_admin_id);
+  INSERT INTO "user_service"."role_permission" ("role_id", "permission_id") VALUES(tester_role_id, admin_id);
+END; 
+$$
+-- +migrate StatementEnd
 
 -- +migrate Down
 -- Drop table & relationships
