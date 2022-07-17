@@ -9,11 +9,11 @@ import (
 
 type R struct{}
 
-func (r R) Add(user.User) error {
+func (r R) AddUser(user.User) error {
 	return nil
 }
 
-func (r R) Update(user.User) error {
+func (r R) UpdateUser(user.User) error {
 	return nil
 }
 
