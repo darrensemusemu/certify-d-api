@@ -14,12 +14,12 @@ import (
 const EnvVarJWKSUrl = "JWKS_URL"
 
 // JWT session claims
-type claims struct {
+type Claims struct {
 	// Kratos user session
 	Session kratosClient.Session `json:"session,omitempty"`
 
 	jwt.RegisteredClaims
-	m sync.Mutex
+	m *sync.Mutex
 }
 
 // Check that jwt are valid
@@ -36,12 +36,16 @@ func Validate(jwtB64 string, v JWTValidator) error {
 }
 
 // Creates a new JWT Claim
-func NewClaims() *claims {
-	return &claims{}
+func NewClaims() *Claims {
+	return &Claims{
+		Session:          kratosClient.Session{},
+		RegisteredClaims: jwt.RegisteredClaims{},
+		m:                &sync.Mutex{},
+	}
 }
 
 // Retrieve a JSON Web Key (JWKS)
-func (s *claims) GetJWKS() (jwt.Keyfunc, error) {
+func (s *Claims) GetJWKS() (jwt.Keyfunc, error) {
 	jwksUrl := os.Getenv(EnvVarJWKSUrl)
 	if jwksUrl == "" {
 		return nil, ErrJwksUrlNotFound
@@ -54,7 +58,7 @@ func (s *claims) GetJWKS() (jwt.Keyfunc, error) {
 }
 
 // Parse and validate base 64 encoded jwt
-func (s *claims) Parse(jwtB64 string, keyFunc jwt.Keyfunc) error {
+func (s *Claims) Parse(jwtB64 string, keyFunc jwt.Keyfunc) error {
 	s.m.Lock()
 	defer s.m.Unlock()
 
@@ -62,7 +66,7 @@ func (s *claims) Parse(jwtB64 string, keyFunc jwt.Keyfunc) error {
 	if err != nil {
 		return fmt.Errorf("pass jwt: %w", err)
 	}
-	claims, ok := token.Claims.(*claims)
+	claims, ok := token.Claims.(*Claims)
 	if !ok && !token.Valid {
 		_ = claims
 		return err

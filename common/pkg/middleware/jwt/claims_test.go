@@ -84,7 +84,7 @@ func TestClaimsParse(t *testing.T) {
 	}
 }
 
-func testHelperClaimsValidator(t *testing.T, ts *httptest.Server) *claims {
+func testHelperClaimsValidator(t *testing.T, ts *httptest.Server) *Claims {
 	t.Setenv(EnvVarJWKSUrl, ts.URL)
 	return NewClaims()
 }
