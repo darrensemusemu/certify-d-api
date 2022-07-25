@@ -1,53 +1,67 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
+
+	_ "github.com/jackc/pgx/v4/stdlib"
 
 	"github.com/darrensemusemu/certify-d-api/common/pkg/middleware/jwt"
-	"github.com/go-chi/chi/v5"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/darrensemusemu/certify-d-api/service.user/internal/http/rest"
+	"github.com/darrensemusemu/certify-d-api/service.user/internal/http/server"
+	"github.com/darrensemusemu/certify-d-api/service.user/internal/storage/postgres"
 )
 
+type config struct {
+	dbConn  string
+	jwksUrl string
+	port    int
+}
+
 func main() {
-	// ctx := context.Background()
+	cfg := config{}
+	flag.StringVar(&cfg.dbConn, "dbConn", "postgres://user_service:user_service@localhost:5432/certify_d", "datababse connection string")
+	flag.StringVar(&cfg.jwksUrl, jwt.EnvVarJWKSUrl, "http://localhost:4456/.well-known/jwks.json", "json web keys (JWKS) url")
+	flag.IntVar(&cfg.port, "port", 8080, "port number for service")
+	flag.Parse()
 
-	os.Setenv("XDG_CONFIG_HOME", "../../sqlbioler.toml")
-	// connString := "postgres://user_service:user_service@localhost:5432/certify_d"
-	// db, err := sql.Open("pgx", connString)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	r := chi.NewRouter()
-	os.Setenv(jwt.EnvVarJWKSUrl, "http://oathkeeper-api:4456/.well-known/jwks.json")
+	err := run(cfg)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		os.Exit(1)
+	}
 
-	r.Get("/health/alive", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	})
+}
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		autHeader := r.Header.Get("Authorization")
-		jwtB64 := strings.Split(autHeader, " ")[1]
-		claims := jwt.NewClaims()
-		err := jwt.Validate(jwtB64, claims)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Println(err)
-			return
-		}
+func run(cfg config) error {
+	// TODO: use viper???
+	err := os.Setenv(jwt.EnvVarJWKSUrl, cfg.jwksUrl)
+	if err != nil {
+		return err
+	}
 
-		if err != nil {
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				fmt.Println(err)
-				return
-			}
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(r.Header.Get("Authorization")))
-	})
+	err = os.Setenv("svc", "user")
+	if err != nil {
+		return err
+	}
 
-	http.ListenAndServe(":8080", r)
+	userRepo, err := postgres.NewWithConnString(cfg.dbConn)
+	if err != nil {
+		return err
+	}
+
+	server, err := server.New(userRepo, nil)
+	if err != nil {
+		return err
+	}
+
+	restHandler := rest.Handler(server)
+	err = http.ListenAndServe(fmt.Sprintf(":%v", cfg.port), restHandler)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

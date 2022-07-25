@@ -35,6 +35,12 @@ func NewWithConnString(connString string) (*storage, error) {
 	return s, nil
 }
 
+// Storage close connection
+func (s *storage) Close() error {
+	err := s.DB.Close()
+	return err
+}
+
 // Adds a new user to repository
 func (s *storage) AddUser(ctx context.Context, user user.User) (user.User, error) {
 	role, err := models.Roles(models.RoleWhere.Slug.EQ(user.Role)).One(ctx, s.DB)
@@ -69,8 +75,22 @@ func (s *storage) AddUser(ctx context.Context, user user.User) (user.User, error
 	return user, nil
 }
 
+// Check if user exists in repo
+func (s *storage) UserExists(ctx context.Context, id string) (bool, error) {
+	if id == "" {
+		return false, fmt.Errorf("user exists err: no id was provided")
+	}
+
+	exists, err := models.Users(models.UserWhere.ID.EQ(id)).Exists(ctx, s.DB)
+	if err != nil {
+		return false, fmt.Errorf("user exist err: %v", err)
+	}
+
+	return exists, nil
+}
+
 // Gets a user given an id
-func (s *storage) GetUserByID(ctx context.Context, id string) (user.User, error) {
+func (s *storage) GetUserById(ctx context.Context, id string) (user.User, error) {
 	user := user.User{}
 	if id == "" {
 		return user, fmt.Errorf("get user by id err: id provided not valid")

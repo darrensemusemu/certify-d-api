@@ -1,6 +1,7 @@
 package server_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/darrensemusemu/certify-d-api/common/pkg/logger"
@@ -11,49 +12,57 @@ import (
 
 type userRepo struct{}
 
-func (r *userRepo) AddUser(user.User) error    { return nil }
-func (r *userRepo) UpdateUser(user.User) error { return nil }
+func (r *userRepo) AddUser(ctx context.Context, u user.User) (user.User, error) {
+	return u, nil
+}
+func (r *userRepo) UserExists(ctx context.Context, id string) (bool, error) {
+	return true, nil
+}
+func (r *userRepo) GetUserById(ctx context.Context, id string) (user.User, error) {
+	return user.User{}, nil
+}
+func (r *userRepo) UpdateUser(ctx context.Context, u user.User) (user.User, error) {
+	return u, nil
+}
 
 func TestServerNew(t *testing.T) {
 	is := is.New(t)
 	l, err := logger.New("testservice")
 	is.NoErr(err)
 
+	type args struct {
+		tUserRepo user.Repository
+		tLogger   *logger.Logger
+	}
 	tests := []struct {
 		name         string
 		expectErr    bool
 		expectServer bool
-		server       *server.Server
+		args         args
 	}{
 		{
-			name:         "check zero value params",
+			name:         "check no user repo params",
 			expectErr:    true,
 			expectServer: false,
-			server:       &server.Server{},
+			args:         args{tUserRepo: nil, tLogger: nil},
 		},
 		{
 			name:         "check nil logger",
 			expectErr:    false,
 			expectServer: true,
-			server: &server.Server{
-				UserR:  &userRepo{},
-				Logger: nil,
-			},
+			args:         args{tUserRepo: &userRepo{}, tLogger: nil},
 		},
 		{
 			name:         "pass valid params",
 			expectErr:    false,
 			expectServer: true,
-			server: &server.Server{
-				UserR:  &userRepo{},
-				Logger: l,
-			},
+			args:         args{tUserRepo: &userRepo{}, tLogger: l},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s, err := server.New(tt.server.UserR, tt.server.Logger)
+			s, err := server.New(tt.args.tUserRepo, tt.args.tLogger)
 			is.True(tt.expectErr == (err != nil))
 			is.True(tt.expectServer == (s != nil))
 		})

@@ -9,8 +9,8 @@ import (
 
 // Properties of an http server
 type Server struct {
-	UserR  user.Repository
-	Logger *logger.Logger
+	UserService user.Service
+	Logger      *logger.Logger
 }
 
 // Creates a new server
@@ -27,9 +27,14 @@ func New(uR user.Repository, l *logger.Logger) (*Server, error) {
 		return nil, err
 	}
 
+	userService, err := user.NewService(uR)
+	if err != nil {
+		return nil, err
+	}
+
 	s := &Server{
-		UserR:  uR,
-		Logger: l,
+		UserService: userService,
+		Logger:      l,
 	}
 	return s, nil
 }

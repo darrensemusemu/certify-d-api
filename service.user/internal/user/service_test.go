@@ -1,6 +1,7 @@
 package user_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/darrensemusemu/certify-d-api/service.user/internal/user"
@@ -9,12 +10,20 @@ import (
 
 type R struct{}
 
-func (r R) AddUser(user.User) error {
-	return nil
+func (r R) AddUser(ctx context.Context, u user.User) (user.User, error) {
+	return u, nil
 }
 
-func (r R) UpdateUser(user.User) error {
-	return nil
+func (r R) UserExists(ctx context.Context, id string) (bool, error) {
+	return true, nil
+}
+
+func (r R) GetUserById(ctx context.Context, id string) (user.User, error) {
+	return user.User{}, nil
+}
+
+func (r R) UpdateUser(ctx context.Context, u user.User) (user.User, error) {
+	return u, nil
 }
 
 func TestNewService(t *testing.T) {
@@ -28,6 +37,7 @@ func TestNewService(t *testing.T) {
 
 func TestServiceAdd(t *testing.T) {
 	is := is.New(t)
+	ctx := context.Background()
 
 	testRepo := R{}
 	svc, err := user.NewService(testRepo)
@@ -35,7 +45,7 @@ func TestServiceAdd(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := svc.Add(tt.User)
+			_, err := svc.Add(ctx, tt.User)
 			is.True(tt.expectErr == (err != nil))
 		})
 	}
@@ -43,6 +53,7 @@ func TestServiceAdd(t *testing.T) {
 
 func TestServiceUpdate(t *testing.T) {
 	is := is.New(t)
+	ctx := context.Background()
 
 	testRepo := R{}
 	svc, err := user.NewService(testRepo)
@@ -50,7 +61,46 @@ func TestServiceUpdate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := svc.Update(tt.User)
+			_, err := svc.Update(ctx, tt.User)
+			is.True(tt.expectErr == (err != nil))
+		})
+	}
+}
+
+func TestServiceUserExists(t *testing.T) {
+	// TODO: implement test"
+}
+
+func TestServiceGetUserByIdt(t *testing.T) {
+	is := is.New(t)
+	ctx := context.Background()
+
+	testRepo := R{}
+	svc, err := user.NewService(testRepo)
+	is.NoErr(err)
+
+	type args struct{ id string }
+
+	var tests = []struct {
+		name      string
+		expectErr bool
+		args      args
+	}{
+		{
+			name:      "user id empty",
+			expectErr: true,
+			args:      args{id: ""},
+		},
+		{
+			name:      "user id provided",
+			expectErr: false,
+			args:      args{id: "1"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := svc.GetById(ctx, tt.args.id)
 			is.True(tt.expectErr == (err != nil))
 		})
 	}
