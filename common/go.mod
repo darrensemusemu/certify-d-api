@@ -4,8 +4,10 @@ go 1.18
 
 require (
 	github.com/MicahParks/keyfunc v1.1.0
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/matryer/is v1.4.0
+	github.com/moogar0880/problems v0.1.1
 	github.com/ory/kratos-client-go v0.8.0-alpha.2
 	go.uber.org/zap v1.21.0
 )
