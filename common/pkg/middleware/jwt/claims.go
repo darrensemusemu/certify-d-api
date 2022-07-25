@@ -10,6 +10,7 @@ import (
 
 	"github.com/MicahParks/keyfunc"
 	"github.com/darrensemusemu/certify-d-api/common/pkg/env"
+	"github.com/darrensemusemu/certify-d-api/common/pkg/httpresult"
 	"github.com/darrensemusemu/certify-d-api/common/pkg/logger"
 	"github.com/golang-jwt/jwt/v4"
 	kratosClient "github.com/ory/kratos-client-go"
@@ -102,8 +103,9 @@ func KratosAuthClaims(l *logger.Logger) func(http.Handler) http.Handler {
 			}
 
 			if authHeader == "" {
-				// TODO: add problem details & log error
 				w.WriteHeader(http.StatusUnauthorized)
+				err := fmt.Errorf("could not find authorization header")
+				httpresult.ServeJSONProblem(http.StatusForbidden, err)(w, r)
 				return
 			}
 
@@ -111,8 +113,7 @@ func KratosAuthClaims(l *logger.Logger) func(http.Handler) http.Handler {
 			claims := NewClaims()
 			err := Validate(jwtB64, claims)
 			if err != nil {
-				// TODO: add problem details & log error
-				w.WriteHeader(http.StatusForbidden)
+				httpresult.ServeJSONProblem(http.StatusForbidden, err)(w, r)
 				return
 			}
 
