@@ -9,13 +9,17 @@ import (
 
 // Properties of an http server
 type Server struct {
-	UserR  user.Repository
-	Logger *logger.Logger
+	UserService user.Service
+	Logger      *logger.Logger
+}
+
+type repository interface {
+	user.Repository
 }
 
 // Creates a new server
-func New(uR user.Repository, l *logger.Logger) (*Server, error) {
-	if uR == nil {
+func New(r repository, l *logger.Logger) (*Server, error) {
+	if r == nil {
 		return nil, fmt.Errorf("new server err: user service nil")
 	}
 
@@ -27,9 +31,14 @@ func New(uR user.Repository, l *logger.Logger) (*Server, error) {
 		return nil, err
 	}
 
+	userService, err := user.NewService(r)
+	if err != nil {
+		return nil, err
+	}
+
 	s := &Server{
-		UserR:  uR,
-		Logger: l,
+		UserService: userService,
+		Logger:      l,
 	}
 	return s, nil
 }

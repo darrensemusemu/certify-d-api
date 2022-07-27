@@ -2,52 +2,89 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
-	"strings"
 
-	"github.com/darrensemusemu/certify-d-api/common/pkg/middleware/jwt"
-	"github.com/go-chi/chi/v5"
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
+
+	"github.com/darrensemusemu/certify-d-api/common/pkg/env"
+	"github.com/darrensemusemu/certify-d-api/common/pkg/middleware/jwt"
+	"github.com/darrensemusemu/certify-d-api/service.user/internal/http/rest"
+	"github.com/darrensemusemu/certify-d-api/service.user/internal/http/server"
+	"github.com/darrensemusemu/certify-d-api/service.user/internal/storage/postgres"
 )
 
+type config struct {
+	Port int
+}
+
 func main() {
-	// ctx := context.Background()
+	cfg := config{}
+	pflag.IntVar(&cfg.Port, "port", 8080, "port number for service")
+	pflag.Parse()
 
-	os.Setenv("XDG_CONFIG_HOME", "../../sqlbioler.toml")
-	// connString := "postgres://user_service:user_service@localhost:5432/certify_d"
-	// db, err := sql.Open("pgx", connString)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	r := chi.NewRouter()
-	os.Setenv(jwt.EnvVarJWKSUrl, "http://oathkeeper-api:4456/.well-known/jwks.json")
+	if err := initViper(); err != nil {
+		fmt.Printf("%v\n", err)
+		os.Exit(1)
+	}
 
-	r.Get("/health/alive", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	})
+	err := run(cfg)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		os.Exit(1)
+	}
+}
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		autHeader := r.Header.Get("Authorization")
-		jwtB64 := strings.Split(autHeader, " ")[1]
-		claims := jwt.NewClaims()
-		err := jwt.Validate(jwtB64, claims)
+func initViper() error {
+	viper.BindPFlags(pflag.CommandLine)
+	viper.BindEnv("db_conn")
+	viper.BindEnv("env")
+	viper.BindEnv(jwt.EnvVarJWKSUrl)
+	viper.BindEnv("svc_name")
+
+	viper.SetDefault("env", env.Development)
+	viper.SetDefault("svc_name", "user")
+
+	if viper.GetString("env") != env.Development {
+		return nil
+	}
+
+	viper.SetConfigFile("config.yml")
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
+	if err != nil {
+		return fmt.Errorf("fatal error config file: %w", err)
+	}
+
+	return nil
+}
+
+func run(cfg config) error {
+	repo, err := postgres.NewWithConnString(viper.GetString("db_conn"))
+	defer func() {
+		err = repo.Close()
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Println(err)
-			return
+			log.Fatalf("close userrepo err: %v", err)
 		}
+	}()
+	if err != nil {
+		return err
+	}
 
-		if err != nil {
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				fmt.Println(err)
-				return
-			}
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(r.Header.Get("Authorization")))
-	})
+	server, err := server.New(repo, nil)
+	if err != nil {
+		return err
+	}
 
-	http.ListenAndServe(":8080", r)
+	restHandler := rest.Handler(server)
+	log.Printf("Running server on port: %v", cfg.Port)
+	err = http.ListenAndServe(fmt.Sprintf(":%v", cfg.Port), restHandler)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

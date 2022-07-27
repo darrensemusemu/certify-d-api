@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/moogar0880/problems"
+	"github.com/spf13/viper"
 )
 
 //
@@ -21,8 +21,9 @@ func ServeJSON(v interface{}) http.HandlerFunc {
 
 //
 func ServeJSONProblem(statusCode int, err error) http.HandlerFunc {
-	svc := os.Getenv("svc")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		svc := viper.GetString("svc_name")
+
 		p := problems.NewStatusProblem(statusCode)
 		p.Detail = err.Error()
 		p.Instance = fmt.Sprintf("/api/%s%v", svc, r.RequestURI)

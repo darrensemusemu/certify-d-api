@@ -166,7 +166,7 @@ func TestGetUserByID(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			u, err := s.GetUserByID(ctx, tt.args)
+			u, err := s.GetUserById(ctx, tt.args)
 			is.True(tt.expectErr == (err != nil))
 
 			if tt.expectErr {
@@ -178,6 +178,65 @@ func TestGetUserByID(t *testing.T) {
 			is.True(reflect.DeepEqual(u, tempUser))
 		})
 	}
+	_, err = models.Users(models.UserWhere.ID.EQ(tempUser.ID)).DeleteAll(ctx, s.DB)
+	is.NoErr(err)
+}
+
+func TestUserExists(t *testing.T) {
+	is := is.New(t)
+
+	ctx := context.Background()
+	s, err := postgres.NewWithConnString(connString)
+	is.NoErr(err)
+
+	idGen, err := uuid.NewV4()
+	is.NoErr(err)
+	tempUserId := idGen.String()
+
+	tempUser := user.User{
+		ID:          tempUserId,
+		Role:        role.CustomerSlug,
+		Permissions: []string{},
+	}
+
+	tempUser, err = s.AddUser(ctx, tempUser)
+	is.NoErr(err)
+
+	tests := []struct {
+		name      string
+		expectErr bool
+		args      struct{ id string }
+		retVal    bool
+	}{
+		{
+			name:      "user id not provided",
+			expectErr: true,
+			args:      struct{ id string }{},
+			retVal:    false,
+		},
+		{
+			name:      "incorrent user id provided",
+			expectErr: true,
+			args:      struct{ id string }{id: "1"},
+			retVal:    false,
+		},
+		{
+			name:      "correct user id provided",
+			expectErr: false,
+			args:      struct{ id string }{id: tempUser.ID},
+			retVal:    true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			exists, err := s.UserExists(ctx, tt.args.id)
+			is.True(tt.expectErr == (err != nil))
+			is.Equal(exists, tt.retVal)
+
+		})
+	}
+
 	_, err = models.Users(models.UserWhere.ID.EQ(tempUser.ID)).DeleteAll(ctx, s.DB)
 	is.NoErr(err)
 }
