@@ -34,7 +34,8 @@ spec:
             limits:
               cpu: 128m
               memory: 200Mi
-          # livenessProbe:
+              # TODO:
+          # livenessProbe: 
           #   tcpSocket:
           #     port: 80
           #   initialDelaySeconds: 5
@@ -51,6 +52,15 @@ spec:
             successThreshold: 1
             failureThreshold: 3
             periodSeconds: 10
+          env:
+            - name: DB_CONN
+              value: "postgres://user_service:user_service@psql-postgresql.certify-d-dev:5432/certify_d"
+            - name: ENV
+              value: staging
+            - name: JWKS_URL
+              value: http://oathkeeper-api.certify-d-dev.svc.cluster.local:4456/.well-known/jwks.json
+            - name: SVC_NAME
+              value: user
           # env:
           #   - name: DB_HOST
           #     valueFrom:
