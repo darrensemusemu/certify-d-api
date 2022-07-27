@@ -28,9 +28,13 @@ profiles:
         - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
           context: .
           docker:
+            buildArgs:
+              BINARY_NAME: restapi
+              GIT_SSH_KEY_PATH: build/keys/git_ed25519
             cacheFrom:
               # googleCloudBuild replaces cache references to the artifact image with
               # the tagged image reference, useful for caching from the previous build.
               - europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
+          
       googleCloudBuild:
         projectId: darrensemusemu-infra

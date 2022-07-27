@@ -1,0 +1,52 @@
+presubmits:
+  - name: restapi-deploy
+    decorate: true
+    clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
+    run_if_changed: '^service.user\/.*(yaml|yml|Dockerfile)$'
+    skip_report: false
+    context: "service.user"
+    max_concurrency: 1
+    spec:
+      containers:
+        - name: skaffold
+          image: "gcr.io/k8s-skaffold/skaffold:v1.38.0"
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              gcloud auth activate-service-account --key-file=/secrets/skaffold-service-account.json &&
+              gcloud config set project $PROJECT_DEV_NAME &&
+              gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
+              kubectl config get-contexts && 
+              export STATE=$(git rev-list -1 HEAD --abbrev-commit) &&  
+              skaffold build -m $SERVICE_NAME -p prod --file-output build-$STATE.json &&
+              skaffold deploy -m $SERVICE_NAME -a build-$STATE.json
+          env:
+            - name: CLUSTER_DEV_NAME
+              value: main-cluster
+            - name: PROJECT_DEV_NAME
+              value: darrensemusemu-infra
+            - name: PROJECT_DEV_REGION
+              value: europe-west1-b
+            - name: SERVICE_NAME
+              value: swagger-ui
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /secrets/skaffold-service-account.json
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+            - name: service-account
+              mountPath: /secrets
+      volumes:
+        - name: service-account
+          secret:
+            secretName: scaffold-service-account
+      restartPolicy: Always
+    branches: []
+      # - main
+    skip_branches: []
+    
