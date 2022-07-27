@@ -1,13 +1,15 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"net/http"
 	"os"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 
+	"github.com/darrensemusemu/certify-d-api/common/pkg/env"
 	"github.com/darrensemusemu/certify-d-api/common/pkg/middleware/jwt"
 	"github.com/darrensemusemu/certify-d-api/service.user/internal/http/rest"
 	"github.com/darrensemusemu/certify-d-api/service.user/internal/http/server"
@@ -15,39 +17,52 @@ import (
 )
 
 type config struct {
-	dbConn  string
-	jwksUrl string
-	port    int
+	Port int
 }
 
 func main() {
 	cfg := config{}
-	flag.StringVar(&cfg.dbConn, "dbConn", "postgres://user_service:user_service@localhost:5432/certify_d", "datababse connection string")
-	flag.StringVar(&cfg.jwksUrl, jwt.EnvVarJWKSUrl, "http://localhost:4456/.well-known/jwks.json", "json web keys (JWKS) url")
-	flag.IntVar(&cfg.port, "port", 8080, "port number for service")
-	flag.Parse()
+	pflag.IntVar(&cfg.Port, "port", 8080, "port number for service")
+	pflag.Parse()
+
+	if err := initViper(); err != nil {
+		fmt.Printf("%v\n", err)
+		os.Exit(1)
+	}
 
 	err := run(cfg)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		os.Exit(1)
 	}
+}
 
+func initViper() error {
+	viper.BindPFlags(pflag.CommandLine)
+	viper.BindEnv("db_conn")
+	viper.BindEnv("env")
+	viper.BindEnv(jwt.EnvVarJWKSUrl)
+	viper.BindEnv("svc_name")
+
+	viper.SetDefault("env", env.Development)
+	viper.SetDefault("svc_name", "user")
+
+	if viper.GetString("env") != env.Development {
+		return nil
+	}
+
+	viper.SetConfigFile("config.yml")
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
+	if err != nil {
+		return fmt.Errorf("fatal error config file: %w", err)
+	}
+
+	return nil
 }
 
 func run(cfg config) error {
-	// TODO: use viper???
-	err := os.Setenv(jwt.EnvVarJWKSUrl, cfg.jwksUrl)
-	if err != nil {
-		return err
-	}
-
-	err = os.Setenv("svc", "user")
-	if err != nil {
-		return err
-	}
-
-	userRepo, err := postgres.NewWithConnString(cfg.dbConn)
+	userRepo, err := postgres.NewWithConnString(viper.GetString("db_conn"))
 	if err != nil {
 		return err
 	}
@@ -58,7 +73,7 @@ func run(cfg config) error {
 	}
 
 	restHandler := rest.Handler(server)
-	err = http.ListenAndServe(fmt.Sprintf(":%v", cfg.port), restHandler)
+	err = http.ListenAndServe(fmt.Sprintf(":%v", viper.GetInt("port")), restHandler)
 	if err != nil {
 		return err
 	}

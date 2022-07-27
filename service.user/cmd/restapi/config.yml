@@ -1,0 +1,5 @@
+db_conn: "postgres://user_service:user_service@localhost:5432/certify_d"
+env: development
+jwks_url: ""
+port: 8080
+svc_name: user
