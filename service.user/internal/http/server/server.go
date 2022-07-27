@@ -13,9 +13,13 @@ type Server struct {
 	Logger      *logger.Logger
 }
 
+type repository interface {
+	user.Repository
+}
+
 // Creates a new server
-func New(uR user.Repository, l *logger.Logger) (*Server, error) {
-	if uR == nil {
+func New(r repository, l *logger.Logger) (*Server, error) {
+	if r == nil {
 		return nil, fmt.Errorf("new server err: user service nil")
 	}
 
@@ -27,7 +31,7 @@ func New(uR user.Repository, l *logger.Logger) (*Server, error) {
 		return nil, err
 	}
 
-	userService, err := user.NewService(uR)
+	userService, err := user.NewService(r)
 	if err != nil {
 		return nil, err
 	}

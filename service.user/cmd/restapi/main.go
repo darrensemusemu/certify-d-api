@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -62,18 +63,25 @@ func initViper() error {
 }
 
 func run(cfg config) error {
-	userRepo, err := postgres.NewWithConnString(viper.GetString("db_conn"))
+	repo, err := postgres.NewWithConnString(viper.GetString("db_conn"))
+	defer func() {
+		err = repo.Close()
+		if err != nil {
+			log.Fatalf("close userrepo err: %v", err)
+		}
+	}()
 	if err != nil {
 		return err
 	}
 
-	server, err := server.New(userRepo, nil)
+	server, err := server.New(repo, nil)
 	if err != nil {
 		return err
 	}
 
 	restHandler := rest.Handler(server)
-	err = http.ListenAndServe(fmt.Sprintf(":%v", viper.GetInt("port")), restHandler)
+	log.Printf("Running server on port: %v", cfg.Port)
+	err = http.ListenAndServe(fmt.Sprintf(":%v", cfg.Port), restHandler)
 	if err != nil {
 		return err
 	}
