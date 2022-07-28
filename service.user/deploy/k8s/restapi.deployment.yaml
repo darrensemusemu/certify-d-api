@@ -56,7 +56,7 @@ spec:
             - name: DB_CONN
               value: "postgres://user_service:user_service@psql-postgresql.certify-d-dev:5432/certify_d"
             - name: ENV
-              value: staging
+              value: development
             - name: JWKS_URL
               value: http://oathkeeper-api.certify-d-dev.svc.cluster.local:4456/.well-known/jwks.json
             - name: SVC_NAME
