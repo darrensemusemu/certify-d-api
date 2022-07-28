@@ -46,7 +46,6 @@ postsubmits:
           secret:
             secretName: scaffold-service-account
       restartPolicy: Always
-    branches: []
-      # - main
+    branches:
+      - main
     skip_branches: []
-    
