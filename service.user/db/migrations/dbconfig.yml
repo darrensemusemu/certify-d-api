@@ -1,11 +1,13 @@
+# TODO: remove password from code
+
 development:
   dialect: postgres
   datasource: host=localhost port=5432 dbname=certify_d user=user_service password=user_service sslmode=disable
   dir: postgres
   table: migrations
 
-production:
+staging:
   dialect: postgres
-  datasource: host=prodhost dbname=proddb user=${DB_USER} password=${DB_PASSWORD} sslmode=require
+  datasource: host=localhost port=5433 dbname=certify_d user=user_service password=user_service sslmode=disable
   dir: postgres
   table: migrations

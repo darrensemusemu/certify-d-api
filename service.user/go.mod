@@ -3,7 +3,7 @@ module github.com/darrensemusemu/certify-d-api/service.user
 go 1.18
 
 require (
-	github.com/darrensemusemu/certify-d-api/common v1.2.0
+	github.com/darrensemusemu/certify-d-api/common v1.3.0
 	github.com/friendsofgo/errors v0.9.2
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-playground/validator v9.31.0+incompatible

@@ -224,6 +224,10 @@ kratos:
 
     dsn: memory
 
+    log:
+      level: info
+      leak_sensitive_values: true
+
     identity:
       default_schema_id: customer
       schemas:
