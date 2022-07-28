@@ -4,7 +4,7 @@ metadata:
   name: service.user
 build:
   artifacts:
-    - image: docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
+    - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
       context: .
       docker:
         dockerfile: build/Dockerfile

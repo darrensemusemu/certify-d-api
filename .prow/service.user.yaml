@@ -28,7 +28,7 @@ presubmits:
             - name: PROJECT_DEV_REGION
               value: europe-west1-b
             - name: SERVICE_NAME
-              value: "service.user"
+              value: service.user
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /secrets/skaffold-service-account.json
           resources:
