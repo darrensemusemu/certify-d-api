@@ -107,7 +107,7 @@ ingress:
           - localhost
         secretName: letsencrypt-prod-cluster
 kratos:
-  development: true
+  development: false
   # -- Enable the initialization job. Required to work with a DB
   autoMigrate: true
 
