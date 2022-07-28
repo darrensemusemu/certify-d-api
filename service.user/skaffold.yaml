@@ -28,6 +28,7 @@ profiles:
         - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
           context: .
           docker:
+            dockerfile: build/Dockerfile
             buildArgs:
               BINARY_NAME: restapi
               GIT_SSH_KEY_PATH: build/keys/git_ed25519
