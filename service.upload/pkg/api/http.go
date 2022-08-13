@@ -4,7 +4,15 @@ import (
 	"net/http"
 
 	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
+	"github.com/getkin/kin-openapi/openapi3filter"
 )
+
+func init() {
+	openapi3filter.RegisterBodyDecoder("image/png", openapi3filter.FileBodyDecoder)
+	openapi3filter.RegisterBodyDecoder("image/jpeg", openapi3filter.FileBodyDecoder)
+	openapi3filter.RegisterBodyDecoder("image/jpg", openapi3filter.FileBodyDecoder)
+	openapi3filter.RegisterBodyDecoder("application/pdf", openapi3filter.FileBodyDecoder)
+}
 
 type HttpServer struct{}
 

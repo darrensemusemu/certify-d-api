@@ -5,7 +5,7 @@ info:
 servers:
   - url: https://certify-d.darrensemusemu.dev/api/upload
     description: Staging 
-  - url: http:localhost:8080
+  - url: http://localhost:8080/api
     description: Development 
 paths:
   /health/alive:
