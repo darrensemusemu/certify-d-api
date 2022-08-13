@@ -26,23 +26,29 @@ spec:
           resources:
             requests:
               cpu: 64m
-              memory: 64Mi
+              memory: 100Mi
             limits:
-              cpu: 64m
-              memory: 64Mi
+              cpu: 128m
+              memory: 200Mi
           readinessProbe:
             httpGet:
               path: /swagger/index.html
               port: 8080
-            initialDelaySeconds: 30
+            initialDelaySeconds: 5
             timeoutSeconds: 2
             successThreshold: 1
-            failureThreshold: 3
-            periodSeconds: 30
+            failureThreshold: 6
+            periodSeconds: 10
           ports:
             - containerPort: 8080
               name: http
           env:
             - name: BASE_URL
               value: /swagger
+            - name: URLS
+              value: | 
+                [
+                  {url: "./upload.yaml", name: "Upload service"},
+                  {url: "./user.yaml", name: "User service"}
+                ]
       restartPolicy: Always
