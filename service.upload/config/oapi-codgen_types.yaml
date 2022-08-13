@@ -1,0 +1,7 @@
+package: api
+generate:
+  chi-server: false
+  models: true
+  embedded-spec: false
+skip-prune: true
+output: openapi_types.gen.go
