@@ -2,7 +2,7 @@ postsubmits:
   - name: restapi-deploy
     decorate: true
     clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
-    run_if_changed: '^(service.user\/.*(yaml|yml|Dockerfile))|(\.prow\/service\.user\.yaml)$'
+    run_if_changed: '^(service.user\/.*)|(\.prow\/service\.user\.yaml)$'
     skip_report: false
     context: "service.user-deploy"
     max_concurrency: 1
