@@ -1,0 +1,13 @@
+# TODO: remove password from code
+
+development:
+  dialect: postgres
+  datasource: host=localhost port=5432 dbname=certify_d user=upload_service password=upload_service sslmode=disable
+  dir: postgres
+  table: migrations
+
+staging:
+  dialect: postgres
+  datasource: host=localhost port=5433 dbname=certify_d user=upload_service password=upload_service sslmode=disable
+  dir: postgres
+  table: migrations
