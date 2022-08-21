@@ -24,13 +24,8 @@ func main() {
 	pflag.IntVar(&cfg.Port, "port", 8080, "service port number")
 	pflag.Parse()
 
-	if err := initViper(); err != nil {
-		fmt.Fprintf(os.Stdout, "%v\n", err)
-		os.Exit(1)
-	}
-
 	if err := run(cfg); err != nil {
-		fmt.Fprintf(os.Stdout, "%v\n", err)
+		fmt.Fprintf(os.Stderr, "%v\n", err.Error())
 		os.Exit(1)
 	}
 }
@@ -46,6 +41,10 @@ func initViper() error {
 }
 
 func run(cfg config) error {
+	if err := initViper(); err != nil {
+		return err
+	}
+
 	swagger, err := api.GetSwagger()
 	if err != nil {
 		return err
