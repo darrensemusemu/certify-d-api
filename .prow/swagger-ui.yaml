@@ -1,4 +1,4 @@
-postsubmits:
+presubmits:
   - name: swagger-ui-deploy
     decorate: true
     clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
@@ -10,16 +10,9 @@ postsubmits:
       containers:
         - name: skaffold
           image: "gcr.io/k8s-skaffold/skaffold:v1.38.0"
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              gcloud auth activate-service-account --key-file=/secrets/skaffold-service-account.json &&
-              gcloud config set project $PROJECT_DEV_NAME &&
-              gcloud container clusters get-credentials $CLUSTER_DEV_NAME --region europe-west1-b &&
-              kubectl config get-contexts && 
-              export STATE=$(git rev-list -1 HEAD --abbrev-commit) &&  
-              skaffold build -m $SERVICE_NAME -p prod --file-output build-$STATE.json &&
-              skaffold deploy -m $SERVICE_NAME -a build-$STATE.json
+          command: ["/bin/sh", "-c", "../scripts/skaffold-deploy.sh"]
+          # args:
+            # - 
           env:
             - name: CLUSTER_DEV_NAME
               value: main-cluster
