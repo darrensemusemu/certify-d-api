@@ -81,9 +81,12 @@ func run(cfg config) error {
 	}
 
 	s.RegisterRoutes(func(r chi.Router) http.Handler {
-		r.Use(middleware.OapiRequestValidator(swagger))
-		s := api.HandlerFromMux(restHandler, r)
-		return s
+		r.Mount("/v1", func() http.Handler {
+			r.Use(middleware.OapiRequestValidator(swagger))
+			s := api.HandlerFromMux(restHandler, r)
+			return s
+		}())
+		return r
 	})
 
 	if err = s.RunHttpServer(); err != nil {
