@@ -10,7 +10,7 @@ presubmits:
       containers:
         - name: skaffold
           image: "gcr.io/k8s-skaffold/skaffold:v1.38.0"
-          command: ["/bin/sh", "-c", "../scripts/skaffold-deploy.sh"]
+          command: ["/bin/sh", "-c", "./scripts/skaffold-deploy.sh"]
           # args:
             # - 
           env:
