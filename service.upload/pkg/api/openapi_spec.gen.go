@@ -46,8 +46,8 @@ var swaggerSpec = []string{
 	"+nsqm7uMjFDZBXN6F/5c8HXkVYIb6Rnehecdw0Ll0nNMGCblLsmHak60ELx8s7rgw3gP8Yyn0V44h7WH",
 	"o/nIgToS3WdD9/6lyabcPZX5lqlH8J5urvTGgzvetBEW6MXJomuYN3scoft9G/t/It8/m0X9G9enZdLO",
 	"hc9TNW0lCDo9XNL0Dv9/cGIJVWJfjSIXRte93H2Avn9qSiWjlqOzf8VcPaQrrg1t0viBzEpE3V5Fdfck",
-	"OXb8xWrCp5zh+Geh9vhvymGZskaksSsIl6j7obAEqRuc1XesZmkahqRKW5e9mr2aoRm6vl3/LwAA//8w",
-	"PxBRyhgAAA==",
+	"OXb8xWrCp5zh+Geh9vhvymGZskaky3kaG4Nwj7ofDUuQusFxfcdwlqZhTqq0ddmr2atZa4mub9f/CwAA",
+	"///wlUUr0BgAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
