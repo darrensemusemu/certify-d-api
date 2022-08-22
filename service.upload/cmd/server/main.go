@@ -12,6 +12,9 @@ import (
 
 	"github.com/darrensemusemu/certify-d-api/common/pkg/env"
 	"github.com/darrensemusemu/certify-d-api/common/pkg/server"
+	httpUpload "github.com/darrensemusemu/certify-d-api/service.upload/internal/http"
+	"github.com/darrensemusemu/certify-d-api/service.upload/internal/storage/db"
+	"github.com/darrensemusemu/certify-d-api/service.upload/internal/store"
 	"github.com/darrensemusemu/certify-d-api/service.upload/pkg/api"
 )
 
@@ -25,7 +28,7 @@ func main() {
 	pflag.Parse()
 
 	if err := run(cfg); err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err.Error())
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
 }
@@ -45,16 +48,47 @@ func run(cfg config) error {
 		return err
 	}
 
+	repo, err := db.NewPostgresDB("")
+	defer func() {
+		err := repo.DB.Close()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", err)
+			os.Exit(1)
+		}
+	}()
+	if err != nil {
+		return err
+	}
+
+	storeSvc, err := store.NewService(repo)
+	if err != nil {
+		return err
+	}
+
+	restHandler, err := httpUpload.NewHandler(storeSvc)
+	if err != nil {
+		return err
+	}
+
+	s, err := server.NewHttpServer()
+	if err != nil {
+		return err
+	}
+
 	swagger, err := api.GetSwagger()
 	if err != nil {
 		return err
 	}
 
-	err = server.RunHttpServer(func(r chi.Router) http.Handler {
+	s.RegisterRoutes(func(r chi.Router) http.Handler {
 		r.Use(middleware.OapiRequestValidator(swagger))
-		s := api.HandlerFromMux(api.NewHttpServer(), r)
+		s := api.HandlerFromMux(restHandler, r)
 		return s
 	})
 
-	return err
+	if err = s.RunHttpServer(); err != nil {
+		return err
+	}
+	return nil
+
 }

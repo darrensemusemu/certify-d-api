@@ -9,5 +9,10 @@
       "file:///home/darren/Documents/Github/certify-d/third_party/ory.oathkeeper/k8s.yaml"
     ],
     "https://raw.githubusercontent.com/deployphp/deployer/master/src/schema.json": "file:///home/darren/Documents/Github/certify-d/third_party/ory.oathkeeper/deploy.yml"
-  }
+  },
+  "cSpell.words": [
+    "darrensemusemu",
+    "Oapi",
+    "pflag"
+  ]
 }
