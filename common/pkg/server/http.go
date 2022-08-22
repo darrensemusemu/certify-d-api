@@ -5,31 +5,38 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/darrensemusemu/certify-d-api/common/pkg/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/spf13/viper"
 )
 
-func RunHttpServer(createHandler func(chi.Router) http.Handler) error {
-	apiRouter := chi.NewRouter()
-	setMiddlewares(apiRouter)
+// Creates a new http server
+func NewHttpServer() (*Server, error) {
+	return &Server{Router: nil}, nil
+}
 
+// Registers API routes and middleware
+func (s *Server) RegisterRoutes(createAPIHandler func(chi.Router) http.Handler) {
 	rootRouter := chi.NewRouter()
-	rootRouter.Mount("/api", createHandler(apiRouter))
 
+	apiRouter := chi.NewRouter()
+	setMiddleware(apiRouter)
+
+	rootRouter.Mount("/api", createAPIHandler(apiRouter))
+	s.Router = rootRouter
+}
+
+// Runs http server
+func (s *Server) RunHttpServer() error {
 	port := fmt.Sprintf(":%d", viper.GetInt("PORT"))
 	fmt.Fprintf(os.Stdout, "Starting HTTP server on PORT %v\n", port)
-
-	err := http.ListenAndServe(port, rootRouter)
-	if err != nil {
-		logger.Log.Errorw(err.Error())
+	if err := http.ListenAndServe(port, s.Router); err != nil {
 		return err
 	}
 	return nil
 }
 
-func setMiddlewares(router *chi.Mux) {
+func setMiddleware(router *chi.Mux) {
 	router.Use(middleware.RequestID)
 	router.Use(middleware.RealIP)
 	router.Use(middleware.Logger)

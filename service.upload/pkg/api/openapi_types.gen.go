@@ -69,11 +69,11 @@ type PostStoreRequest struct {
 	StoreRef string `json:"storeRef"`
 }
 
-// GetStoreParams defines parameters for GetStore.
-type GetStoreParams struct {
+// HandleGetStoreParams defines parameters for HandleGetStore.
+type HandleGetStoreParams struct {
 	// Store reference
 	StoreRef string `form:"storeRef" json:"storeRef"`
 }
 
-// AddStoreJSONRequestBody defines body for AddStore for application/json ContentType.
-type AddStoreJSONRequestBody PostStoreRequest
+// HandleAddStoreJSONRequestBody defines body for HandleAddStore for application/json ContentType.
+type HandleAddStoreJSONRequestBody PostStoreRequest
