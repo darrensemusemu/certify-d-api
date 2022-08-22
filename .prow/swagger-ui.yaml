@@ -1,4 +1,4 @@
-presubmits:
+postsubmits:
   - name: swagger-ui-deploy
     decorate: true
     clone_uri: "git@github.com:darrensemusemu/certify-d-api.git"
@@ -11,8 +11,6 @@ presubmits:
         - name: skaffold
           image: "gcr.io/k8s-skaffold/skaffold:v1.38.0"
           command: ["/bin/sh", "-c", "./scripts/skaffold-deploy.sh"]
-          # args:
-            # - 
           env:
             - name: CLUSTER_DEV_NAME
               value: main-cluster
