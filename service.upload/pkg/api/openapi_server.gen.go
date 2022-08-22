@@ -16,25 +16,25 @@ import (
 type ServerInterface interface {
 	// Application liveness probe
 	// (GET /health/alive)
-	GetServerAlive(w http.ResponseWriter, r *http.Request)
+	HandleGetServerAlive(w http.ResponseWriter, r *http.Request)
 	// Application accepting requests
 	// (GET /health/ready)
-	GetServerReady(w http.ResponseWriter, r *http.Request)
+	HandleGetServerReady(w http.ResponseWriter, r *http.Request)
 	// Get a list stores
 	// (GET /store)
-	GetStore(w http.ResponseWriter, r *http.Request, params GetStoreParams)
+	HandleGetStore(w http.ResponseWriter, r *http.Request, params HandleGetStoreParams)
 	// Create a store
 	// (POST /store)
-	AddStore(w http.ResponseWriter, r *http.Request)
+	HandleAddStore(w http.ResponseWriter, r *http.Request)
 	// Delete store
 	// (DELETE /store/{storeId})
-	RemoveStoreById(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID)
+	HandleDeleteStoreById(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID)
 	// Upload file
 	// (POST /store/{storeId}/file)
-	RemoveStoreFiles(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID)
+	HandleDeleteStoreFiles(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID)
 	// Delete file
 	// (DELETE /store/{storeId}/file/{fileId})
-	RemoveStoreFileById(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID, fileId openapi_types.UUID)
+	HandleDeleteStoreFileById(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID, fileId openapi_types.UUID)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -46,12 +46,12 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(http.HandlerFunc) http.HandlerFunc
 
-// GetServerAlive operation middleware
-func (siw *ServerInterfaceWrapper) GetServerAlive(w http.ResponseWriter, r *http.Request) {
+// HandleGetServerAlive operation middleware
+func (siw *ServerInterfaceWrapper) HandleGetServerAlive(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetServerAlive(w, r)
+		siw.Handler.HandleGetServerAlive(w, r)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -61,12 +61,12 @@ func (siw *ServerInterfaceWrapper) GetServerAlive(w http.ResponseWriter, r *http
 	handler(w, r.WithContext(ctx))
 }
 
-// GetServerReady operation middleware
-func (siw *ServerInterfaceWrapper) GetServerReady(w http.ResponseWriter, r *http.Request) {
+// HandleGetServerReady operation middleware
+func (siw *ServerInterfaceWrapper) HandleGetServerReady(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetServerReady(w, r)
+		siw.Handler.HandleGetServerReady(w, r)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -76,14 +76,14 @@ func (siw *ServerInterfaceWrapper) GetServerReady(w http.ResponseWriter, r *http
 	handler(w, r.WithContext(ctx))
 }
 
-// GetStore operation middleware
-func (siw *ServerInterfaceWrapper) GetStore(w http.ResponseWriter, r *http.Request) {
+// HandleGetStore operation middleware
+func (siw *ServerInterfaceWrapper) HandleGetStore(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var err error
 
 	// Parameter object where we will unmarshal all parameters from the context
-	var params GetStoreParams
+	var params HandleGetStoreParams
 
 	// ------------- Required query parameter "storeRef" -------------
 	if paramValue := r.URL.Query().Get("storeRef"); paramValue != "" {
@@ -100,7 +100,7 @@ func (siw *ServerInterfaceWrapper) GetStore(w http.ResponseWriter, r *http.Reque
 	}
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetStore(w, r, params)
+		siw.Handler.HandleGetStore(w, r, params)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -110,12 +110,12 @@ func (siw *ServerInterfaceWrapper) GetStore(w http.ResponseWriter, r *http.Reque
 	handler(w, r.WithContext(ctx))
 }
 
-// AddStore operation middleware
-func (siw *ServerInterfaceWrapper) AddStore(w http.ResponseWriter, r *http.Request) {
+// HandleAddStore operation middleware
+func (siw *ServerInterfaceWrapper) HandleAddStore(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.AddStore(w, r)
+		siw.Handler.HandleAddStore(w, r)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -125,34 +125,8 @@ func (siw *ServerInterfaceWrapper) AddStore(w http.ResponseWriter, r *http.Reque
 	handler(w, r.WithContext(ctx))
 }
 
-// RemoveStoreById operation middleware
-func (siw *ServerInterfaceWrapper) RemoveStoreById(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	var err error
-
-	// ------------- Path parameter "storeId" -------------
-	var storeId openapi_types.UUID
-
-	err = runtime.BindStyledParameter("simple", false, "storeId", chi.URLParam(r, "storeId"), &storeId)
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "storeId", Err: err})
-		return
-	}
-
-	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.RemoveStoreById(w, r, storeId)
-	}
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		handler = middleware(handler)
-	}
-
-	handler(w, r.WithContext(ctx))
-}
-
-// RemoveStoreFiles operation middleware
-func (siw *ServerInterfaceWrapper) RemoveStoreFiles(w http.ResponseWriter, r *http.Request) {
+// HandleDeleteStoreById operation middleware
+func (siw *ServerInterfaceWrapper) HandleDeleteStoreById(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var err error
@@ -167,7 +141,7 @@ func (siw *ServerInterfaceWrapper) RemoveStoreFiles(w http.ResponseWriter, r *ht
 	}
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.RemoveStoreFiles(w, r, storeId)
+		siw.Handler.HandleDeleteStoreById(w, r, storeId)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -177,8 +151,34 @@ func (siw *ServerInterfaceWrapper) RemoveStoreFiles(w http.ResponseWriter, r *ht
 	handler(w, r.WithContext(ctx))
 }
 
-// RemoveStoreFileById operation middleware
-func (siw *ServerInterfaceWrapper) RemoveStoreFileById(w http.ResponseWriter, r *http.Request) {
+// HandleDeleteStoreFiles operation middleware
+func (siw *ServerInterfaceWrapper) HandleDeleteStoreFiles(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "storeId" -------------
+	var storeId openapi_types.UUID
+
+	err = runtime.BindStyledParameter("simple", false, "storeId", chi.URLParam(r, "storeId"), &storeId)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "storeId", Err: err})
+		return
+	}
+
+	var handler = func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.HandleDeleteStoreFiles(w, r, storeId)
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler(w, r.WithContext(ctx))
+}
+
+// HandleDeleteStoreFileById operation middleware
+func (siw *ServerInterfaceWrapper) HandleDeleteStoreFileById(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var err error
@@ -202,7 +202,7 @@ func (siw *ServerInterfaceWrapper) RemoveStoreFileById(w http.ResponseWriter, r 
 	}
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.RemoveStoreFileById(w, r, storeId, fileId)
+		siw.Handler.HandleDeleteStoreFileById(w, r, storeId, fileId)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -326,25 +326,25 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	}
 
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/health/alive", wrapper.GetServerAlive)
+		r.Get(options.BaseURL+"/health/alive", wrapper.HandleGetServerAlive)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/health/ready", wrapper.GetServerReady)
+		r.Get(options.BaseURL+"/health/ready", wrapper.HandleGetServerReady)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/store", wrapper.GetStore)
+		r.Get(options.BaseURL+"/store", wrapper.HandleGetStore)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/store", wrapper.AddStore)
+		r.Post(options.BaseURL+"/store", wrapper.HandleAddStore)
 	})
 	r.Group(func(r chi.Router) {
-		r.Delete(options.BaseURL+"/store/{storeId}", wrapper.RemoveStoreById)
+		r.Delete(options.BaseURL+"/store/{storeId}", wrapper.HandleDeleteStoreById)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/store/{storeId}/file", wrapper.RemoveStoreFiles)
+		r.Post(options.BaseURL+"/store/{storeId}/file", wrapper.HandleDeleteStoreFiles)
 	})
 	r.Group(func(r chi.Router) {
-		r.Delete(options.BaseURL+"/store/{storeId}/file/{fileId}", wrapper.RemoveStoreFileById)
+		r.Delete(options.BaseURL+"/store/{storeId}/file/{fileId}", wrapper.HandleDeleteStoreFileById)
 	})
 
 	return r
