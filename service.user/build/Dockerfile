@@ -12,12 +12,13 @@ WORKDIR /usr/src/app
 ARG BINARY_NAME
 ARG GIT_SSH_KEY_PATH
 
-# Setup for ssh onto github
-RUN mkdir -p /root/.ssh
-ADD ${GIT_SSH_KEY_PATH} /root/.ssh/id_rsa
-RUN chmod 700 /root/.ssh/id_rsa
-RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
-RUN git config --global --add url."git@github.com:".insteadOf "https://github.com/"
+# Uncomment lines below to allow for private repos
+# # Setup for ssh onto github
+# RUN mkdir -p /root/.ssh
+# ADD ${GIT_SSH_KEY_PATH} /root/.ssh/id_rsa
+# RUN chmod 700 /root/.ssh/id_rsa
+# RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
+# RUN git config --global --add url."git@github.com:".insteadOf "https://github.com/"
 
 # Download named modules
 COPY ./go.mod ./
