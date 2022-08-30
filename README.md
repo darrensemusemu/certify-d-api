@@ -1,6 +1,8 @@
 # Certify-d API
 
-> NB: This project was initially as a learning leaning spaces for experimenting with new ideas
+
+> NB: This project was initially as a space for experimenting with new ideas
+
 
 This project supports `Certify-d`'s efforts as an online document certification platform. 
 
