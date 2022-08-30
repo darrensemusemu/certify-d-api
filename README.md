@@ -1,6 +1,6 @@
 # Certify-d API
 
-This project supports `Certify-d`'s efforts as an online document certification platform.
+This project supports `Certify-d`'s efforts as an online document certification platform. [What this project tries to solve.](https://notarycapetown.co.za/blog/why-you-need-to-certify-documents/)
 
 ## Architecture
 
