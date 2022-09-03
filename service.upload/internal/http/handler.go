@@ -3,6 +3,7 @@ package http
 import (
 	"net/http"
 
+	"github.com/darrensemusemu/certify-d-api/service.upload/internal/storage/blob"
 	"github.com/darrensemusemu/certify-d-api/service.upload/internal/store"
 	"github.com/darrensemusemu/certify-d-api/service.upload/pkg/api"
 	"github.com/deepmap/oapi-codegen/pkg/types"
@@ -16,13 +17,15 @@ var _ api.ServerInterface = (*Handler)(nil)
 
 // Properties of http upload Handler
 type Handler struct {
+	blobSvc  blob.Service
 	storeSvc store.Service
 }
 
 // Creates a new Handler
-func NewHandler(StoreSvc store.Service) (*Handler, error) {
+func NewHandler(storeSvc store.Service, blobSvc blob.Service) (*Handler, error) {
 	return &Handler{
-		storeSvc: StoreSvc,
+		blobSvc:  blobSvc,
+		storeSvc: storeSvc,
 	}, nil
 }
 

@@ -1,0 +1,3 @@
+env: development
+gs_bucket: certify-d_uploads
+svc_name: service.upload

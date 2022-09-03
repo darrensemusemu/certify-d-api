@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
@@ -13,6 +14,7 @@ import (
 	"github.com/darrensemusemu/certify-d-api/common/pkg/env"
 	"github.com/darrensemusemu/certify-d-api/common/pkg/server"
 	httpUpload "github.com/darrensemusemu/certify-d-api/service.upload/internal/http"
+	"github.com/darrensemusemu/certify-d-api/service.upload/internal/storage/blob"
 	"github.com/darrensemusemu/certify-d-api/service.upload/internal/storage/db"
 	"github.com/darrensemusemu/certify-d-api/service.upload/internal/store"
 	"github.com/darrensemusemu/certify-d-api/service.upload/pkg/api"
@@ -36,21 +38,40 @@ func main() {
 func initViper() error {
 	viper.BindPFlags(pflag.CommandLine)
 	viper.BindEnv("env")
+	viper.BindEnv("GOOGLE_APPLICATION_CREDENTIALS")
+	viper.BindEnv("gs_bucket")
 	viper.BindEnv("svc_name")
 
 	viper.SetDefault("env", env.Development)
 	viper.SetDefault("svc_name", "service.upload")
+
+	if viper.GetString("env") != env.Development {
+		return nil
+	}
+
+	// viper.SetConfigFile("config.yaml")
+	viper.SetConfigName("server-config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+	viper.AddConfigPath("service.upload/config")
+	viper.AddConfigPath("config")
+	err := viper.ReadInConfig()
+	if err != nil {
+		return fmt.Errorf("config file: %w", err)
+	}
 	return nil
 }
 
 func run(cfg config) error {
+	ctx := context.Background()
+
 	if err := initViper(); err != nil {
 		return err
 	}
 
 	repo, err := db.NewPostgresDB("")
 	defer func() {
-		err := repo.DB.Close()
+		err := repo.Close()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			os.Exit(1)
@@ -60,12 +81,17 @@ func run(cfg config) error {
 		return err
 	}
 
-	storeSvc, err := store.NewService(repo)
+	st, err := store.NewService(repo)
 	if err != nil {
 		return err
 	}
 
-	restHandler, err := httpUpload.NewHandler(storeSvc)
+	gs, err := blob.NewGoogleStorage(ctx, viper.GetString("gs_bucket"))
+	if err != nil {
+		return err
+	}
+
+	restHandler, err := httpUpload.NewHandler(st, gs)
 	if err != nil {
 		return err
 	}

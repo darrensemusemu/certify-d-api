@@ -12,7 +12,11 @@
   },
   "cSpell.words": [
     "darrensemusemu",
+    "errgroup",
+    "gcloud",
+    "Kratos",
     "Oapi",
+    "oathkeeper",
     "pflag",
     "skaffold"
   ]

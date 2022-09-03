@@ -27,3 +27,11 @@ type Repository interface {
 	// Remove a store given an id
 	RemoveStoreByID(context.Context, string) error
 }
+
+//
+type BlobRepository interface {
+	//
+	GetFile(context.Context)
+	//
+	DeleteFile(context.Context)
+}
