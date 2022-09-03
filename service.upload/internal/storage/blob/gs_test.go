@@ -13,7 +13,7 @@ import (
 	"github.com/matryer/is"
 )
 
-func TestNewGS(t *testing.T) {
+func TestNewGoogleStorage(t *testing.T) {
 	is := is.New(t)
 	ctx := context.Background()
 
@@ -41,7 +41,7 @@ func TestNewGS(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gs, err := blob.NewGS(ctx, tt.giveBucketName)
+			gs, err := blob.NewGoogleStorage(ctx, tt.giveBucketName)
 			is.True(tt.wantErr == (err != nil))
 			if tt.wantErr {
 				return
@@ -91,7 +91,7 @@ func TestGSCreateDeleteObject(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gs, err := blob.NewGS(ctx, "certify-d_uploads")
+			gs, err := blob.NewGoogleStorage(ctx, "certify-d_uploads")
 			is.NoErr(err)
 			err = gs.CreateObject(ctx, tt.giveObjName, tt.giveReader)
 			is.True(tt.wantErr == (err != nil))
@@ -109,7 +109,7 @@ func TestGSGetObjects(t *testing.T) {
 	ctx := context.Background()
 	t.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "./gs-service-account.json")
 	// create gs client
-	gs, err := blob.NewGS(ctx, "certify-d_uploads")
+	gs, err := blob.NewGoogleStorage(ctx, "certify-d_uploads")
 	is.NoErr(err)
 	// create test objects
 	uuidV4, err := uuid.NewV4()

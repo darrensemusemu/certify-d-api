@@ -25,13 +25,16 @@ var (
 	gsJsonKeyErr error
 )
 
+// Checks gcloudStorage implements Service
+var _ Service = (*gcloudStorage)(nil)
+
 type gcloudStorage struct {
 	bktName string
 	client  *storage.Client
 }
 
 // Creates a new google storage handler
-func NewGS(ctx context.Context, bktName string) (*gcloudStorage, error) {
+func NewGoogleStorage(ctx context.Context, bktName string) (*gcloudStorage, error) {
 	if bktName == "" {
 		return nil, fmt.Errorf("new gcloud storage: bucket name not provided")
 	}

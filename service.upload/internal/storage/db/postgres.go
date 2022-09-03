@@ -23,6 +23,9 @@ func NewPostgresDB(connString string) (*postgresDB, error) {
 	return &postgresDB{}, nil
 }
 
+func (s *postgresDB) Close() error {
+	return nil
+}
 func (s *postgresDB) AddStore(context.Context, store.Store) error {
 	return nil
 }
