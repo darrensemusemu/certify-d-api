@@ -6,7 +6,7 @@ require (
 	github.com/darrensemusemu/certify-d-api/common v1.4.0
 	github.com/deepmap/oapi-codegen v1.11.0
 	github.com/friendsofgo/errors v0.9.2
-	github.com/getkin/kin-openapi v0.98.0
+	github.com/getkin/kin-openapi v0.100.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.12.0
