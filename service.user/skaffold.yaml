@@ -4,12 +4,12 @@ metadata:
   name: service.user
 build:
   artifacts:
-    - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
+    - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-server
       context: .
       docker:
         dockerfile: build/Dockerfile
         buildArgs:
-          BINARY_NAME: restapi
+          BINARY_NAME: server
           GIT_SSH_KEY_PATH: build/keys/git_ed25519
   local:
     push: false
@@ -25,17 +25,17 @@ profiles:
           ignoreChanges: true
           variant: AbbrevCommitSha
       artifacts:
-        - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
+        - image: europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-server
           context: .
           docker:
             dockerfile: build/Dockerfile
             buildArgs:
-              BINARY_NAME: restapi
+              BINARY_NAME: server
               GIT_SSH_KEY_PATH: build/keys/git_ed25519
             cacheFrom:
               # googleCloudBuild replaces cache references to the artifact image with
               # the tagged image reference, useful for caching from the previous build.
-              - europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-restapi
+              - europe-west1-docker.pkg.dev/darrensemusemu-infra/certify-d/user-server
           
       googleCloudBuild:
         projectId: darrensemusemu-infra

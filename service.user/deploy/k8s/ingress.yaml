@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: user-restapi
+  name: user-server
   namespace: certify-d-dev
   annotations:
     nginx.ingress.kubernetes.io/auth-url: "http://oathkeeper-api.certify-d-dev.svc.cluster.local:4456/decisions$request_uri"
@@ -32,6 +32,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: user-restapi
+                name: user-server
                 port:
                   name: http
