@@ -4,11 +4,10 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
-	"github.com/deepmap/oapi-codegen/pkg/runtime"
-	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -20,21 +19,9 @@ type ServerInterface interface {
 	// Application accepting requests
 	// (GET /health/ready)
 	HandleGetServerReady(w http.ResponseWriter, r *http.Request)
-	// Get a list stores
-	// (GET /store)
-	HandleGetStore(w http.ResponseWriter, r *http.Request, params HandleGetStoreParams)
-	// Create a store
-	// (POST /store)
-	HandleAddStore(w http.ResponseWriter, r *http.Request)
-	// Delete store
-	// (DELETE /store/{storeId})
-	HandleDeleteStoreById(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID)
-	// Upload file
-	// (POST /store/{storeId}/file)
-	HandleAddStoreFiles(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID)
-	// Delete file
-	// (DELETE /store/{storeId}/file/{fileId})
-	HandleDeleteStoreFileById(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID, fileId openapi_types.UUID)
+	// Signs up a new user
+	// (POST /signUpUser)
+	HandleSignUpUser(w http.ResponseWriter, r *http.Request)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -76,133 +63,14 @@ func (siw *ServerInterfaceWrapper) HandleGetServerReady(w http.ResponseWriter, r
 	handler(w, r.WithContext(ctx))
 }
 
-// HandleGetStore operation middleware
-func (siw *ServerInterfaceWrapper) HandleGetStore(w http.ResponseWriter, r *http.Request) {
+// HandleSignUpUser operation middleware
+func (siw *ServerInterfaceWrapper) HandleSignUpUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params HandleGetStoreParams
-
-	// ------------- Required query parameter "storeRef" -------------
-	if paramValue := r.URL.Query().Get("storeRef"); paramValue != "" {
-
-	} else {
-		siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "storeRef"})
-		return
-	}
-
-	err = runtime.BindQueryParameter("form", true, true, "storeRef", r.URL.Query(), &params.StoreRef)
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "storeRef", Err: err})
-		return
-	}
+	ctx = context.WithValue(ctx, KratosBearerAuthScopes, []string{""})
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.HandleGetStore(w, r, params)
-	}
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		handler = middleware(handler)
-	}
-
-	handler(w, r.WithContext(ctx))
-}
-
-// HandleAddStore operation middleware
-func (siw *ServerInterfaceWrapper) HandleAddStore(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.HandleAddStore(w, r)
-	}
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		handler = middleware(handler)
-	}
-
-	handler(w, r.WithContext(ctx))
-}
-
-// HandleDeleteStoreById operation middleware
-func (siw *ServerInterfaceWrapper) HandleDeleteStoreById(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	var err error
-
-	// ------------- Path parameter "storeId" -------------
-	var storeId openapi_types.UUID
-
-	err = runtime.BindStyledParameter("simple", false, "storeId", chi.URLParam(r, "storeId"), &storeId)
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "storeId", Err: err})
-		return
-	}
-
-	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.HandleDeleteStoreById(w, r, storeId)
-	}
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		handler = middleware(handler)
-	}
-
-	handler(w, r.WithContext(ctx))
-}
-
-// HandleAddStoreFiles operation middleware
-func (siw *ServerInterfaceWrapper) HandleAddStoreFiles(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	var err error
-
-	// ------------- Path parameter "storeId" -------------
-	var storeId openapi_types.UUID
-
-	err = runtime.BindStyledParameter("simple", false, "storeId", chi.URLParam(r, "storeId"), &storeId)
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "storeId", Err: err})
-		return
-	}
-
-	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.HandleAddStoreFiles(w, r, storeId)
-	}
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		handler = middleware(handler)
-	}
-
-	handler(w, r.WithContext(ctx))
-}
-
-// HandleDeleteStoreFileById operation middleware
-func (siw *ServerInterfaceWrapper) HandleDeleteStoreFileById(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	var err error
-
-	// ------------- Path parameter "storeId" -------------
-	var storeId openapi_types.UUID
-
-	err = runtime.BindStyledParameter("simple", false, "storeId", chi.URLParam(r, "storeId"), &storeId)
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "storeId", Err: err})
-		return
-	}
-
-	// ------------- Path parameter "fileId" -------------
-	var fileId openapi_types.UUID
-
-	err = runtime.BindStyledParameter("simple", false, "fileId", chi.URLParam(r, "fileId"), &fileId)
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "fileId", Err: err})
-		return
-	}
-
-	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.HandleDeleteStoreFileById(w, r, storeId, fileId)
+		siw.Handler.HandleSignUpUser(w, r)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -332,19 +200,7 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Get(options.BaseURL+"/health/ready", wrapper.HandleGetServerReady)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/store", wrapper.HandleGetStore)
-	})
-	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/store", wrapper.HandleAddStore)
-	})
-	r.Group(func(r chi.Router) {
-		r.Delete(options.BaseURL+"/store/{storeId}", wrapper.HandleDeleteStoreById)
-	})
-	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/store/{storeId}/file", wrapper.HandleAddStoreFiles)
-	})
-	r.Group(func(r chi.Router) {
-		r.Delete(options.BaseURL+"/store/{storeId}/file/{fileId}", wrapper.HandleDeleteStoreFileById)
+		r.Post(options.BaseURL+"/signUpUser", wrapper.HandleSignUpUser)
 	})
 
 	return r

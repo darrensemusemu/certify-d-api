@@ -11,13 +11,31 @@
     "https://raw.githubusercontent.com/deployphp/deployer/master/src/schema.json": "file:///home/darren/Documents/Github/certify-d/third_party/ory.oathkeeper/deploy.yml"
   },
   "cSpell.words": [
+    "belgif",
+    "codegen",
+    "codgen",
     "darrensemusemu",
+    "deepmap",
     "errgroup",
+    "Errorw",
     "gcloud",
+    "gofrs",
+    "httpresult",
+    "httpuser",
+    "jackc",
+    "JWKS",
+    "Keyfunc",
     "Kratos",
+    "matryer",
     "Oapi",
     "oathkeeper",
+    "openapi",
     "pflag",
-    "skaffold"
+    "Rels",
+    "skaffold",
+    "sqlboiler",
+    "stdlib",
+    "uploded",
+    "volatiletech"
   ]
 }

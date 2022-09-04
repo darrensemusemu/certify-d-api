@@ -1,6 +1,6 @@
 openapi: "3.0.2"
 info:
-  title: API Title
+  title: Upload Service
   version: "1.0"
 servers:
   - url: https://certify-d.darrensemusemu.dev/api/v1/upload
@@ -93,7 +93,7 @@ paths:
           $ref: "#/components/responses/Error"
   /store/{storeId}/file:
     post:
-      operationId: handleDeleteStoreFiles
+      operationId: handleAddStoreFiles
       summary: Upload file
       description: Upload a file to specific store
       tags:

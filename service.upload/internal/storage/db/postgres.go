@@ -9,7 +9,7 @@ import (
 )
 
 // Connection string not provided
-var ErrNewStorageConnEmpty = errors.New("new db: conn string empty")
+var ErrDBConnEmpty = errors.New("new db: conn string empty")
 
 // postgresDB implements store.Repository
 var _ store.Repository = (*postgresDB)(nil)
