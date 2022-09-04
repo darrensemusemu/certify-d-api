@@ -1,8 +1,9 @@
-package postgres
+package db
 
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/gofrs/uuid"
@@ -14,35 +15,39 @@ import (
 	"github.com/darrensemusemu/certify-d-api/service.user/pkg/models"
 )
 
-type storage struct {
+// Connection string not provided
+var ErrDBConnEmpty = errors.New("new db: conn string empty")
+
+// postgresDB implements store.Repository
+var _ user.Repository = (*postgresDB)(nil)
+
+type postgresDB struct {
 	DB *sql.DB
 }
 
-// Create a postgres strorage from a connection string
-func NewWithConnString(connString string) (*storage, error) {
+// Create a postgres storage from a connection string
+func NewPostgresDB(connString string) (*postgresDB, error) {
 	if connString == "" {
-		return nil, fmt.Errorf("new storage err: conn string cannot be emplty")
+		return nil, ErrDBConnEmpty
 	}
-
 	db, err := sql.Open("pgx", connString)
 	if err != nil {
 		return nil, err
 	}
-
-	s := &storage{
+	s := &postgresDB{
 		DB: db,
 	}
 	return s, nil
 }
 
 // Storage close connection
-func (s *storage) Close() error {
+func (s *postgresDB) Close() error {
 	err := s.DB.Close()
 	return err
 }
 
 // Adds a new user to repository
-func (s *storage) AddUser(ctx context.Context, user user.User) (user.User, error) {
+func (s *postgresDB) AddUser(ctx context.Context, user user.User) (user.User, error) {
 	role, err := models.Roles(models.RoleWhere.Slug.EQ(user.Role)).One(ctx, s.DB)
 	if err != nil {
 		return user, fmt.Errorf("add user err: %v", err)
@@ -76,7 +81,7 @@ func (s *storage) AddUser(ctx context.Context, user user.User) (user.User, error
 }
 
 // Check if user exists in repo
-func (s *storage) UserExists(ctx context.Context, id string) (bool, error) {
+func (s *postgresDB) UserExists(ctx context.Context, id string) (bool, error) {
 	if id == "" {
 		return false, fmt.Errorf("user exists err: no id was provided")
 	}
@@ -90,7 +95,7 @@ func (s *storage) UserExists(ctx context.Context, id string) (bool, error) {
 }
 
 // Gets a user given an id
-func (s *storage) GetUserById(ctx context.Context, id string) (user.User, error) {
+func (s *postgresDB) GetUserById(ctx context.Context, id string) (user.User, error) {
 	user := user.User{}
 	if id == "" {
 		return user, fmt.Errorf("get user by id err: id provided not valid")
@@ -112,7 +117,7 @@ func (s *storage) GetUserById(ctx context.Context, id string) (user.User, error)
 }
 
 // Updates an existing user to repository
-func (s *storage) UpdateUser(ctx context.Context, user user.User) (user.User, error) {
+func (s *postgresDB) UpdateUser(ctx context.Context, user user.User) (user.User, error) {
 	if user.ID == "" {
 		return user, fmt.Errorf("update user err: user id not provided")
 	}

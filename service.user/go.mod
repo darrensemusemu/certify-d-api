@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/darrensemusemu/certify-d-api/common v1.3.0
 	github.com/friendsofgo/errors v0.9.2
+	github.com/getkin/kin-openapi v0.100.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gofrs/uuid v4.0.0+incompatible
@@ -26,9 +27,12 @@ require (
 require (
 	github.com/MicahParks/keyfunc v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
+	github.com/go-openapi/jsonpointer v0.19.5 // indirect
+	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/invopop/yaml v0.1.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.12.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -36,7 +40,9 @@ require (
 	github.com/jackc/pgproto3/v2 v2.3.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.11.0 // indirect
+	github.com/josharian/intern v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moogar0880/problems v0.1.1 // indirect
 	github.com/ory/kratos-client-go v0.8.0-alpha.2 // indirect

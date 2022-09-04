@@ -1,4 +1,4 @@
-package postgres_test
+package db_test
 
 import (
 	"context"
@@ -9,14 +9,14 @@ import (
 	"github.com/matryer/is"
 
 	"github.com/darrensemusemu/certify-d-api/service.user/internal/role"
-	"github.com/darrensemusemu/certify-d-api/service.user/internal/storage/postgres"
+	"github.com/darrensemusemu/certify-d-api/service.user/internal/storage/db"
 	"github.com/darrensemusemu/certify-d-api/service.user/internal/user"
 	"github.com/darrensemusemu/certify-d-api/service.user/pkg/models"
 )
 
 var connString string = "postgres://user_service:user_service@localhost:5432/certify_d"
 
-func TestNewWithConnString(t *testing.T) {
+func TestNewPostgresDB(t *testing.T) {
 	is := is.New(t)
 
 	type args = struct {
@@ -45,7 +45,7 @@ func TestNewWithConnString(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s, err := postgres.NewWithConnString(tt.args.connString)
+			s, err := db.NewPostgresDB(tt.args.connString)
 			is.True(tt.expectErr == (err != nil))
 			is.True(tt.expectStorage == (s != nil))
 
@@ -63,7 +63,7 @@ func TestAddUser(t *testing.T) {
 	is := is.New(t)
 	ctx := context.Background()
 
-	s, err := postgres.NewWithConnString(connString)
+	s, err := db.NewPostgresDB(connString)
 	is.NoErr(err)
 	idGen, err := uuid.NewV4()
 	is.NoErr(err)
@@ -126,7 +126,7 @@ func TestGetUserByID(t *testing.T) {
 	is := is.New(t)
 
 	ctx := context.Background()
-	s, err := postgres.NewWithConnString(connString)
+	s, err := db.NewPostgresDB(connString)
 	is.NoErr(err)
 
 	idGen, err := uuid.NewV4()
@@ -186,7 +186,7 @@ func TestUserExists(t *testing.T) {
 	is := is.New(t)
 
 	ctx := context.Background()
-	s, err := postgres.NewWithConnString(connString)
+	s, err := db.NewPostgresDB(connString)
 	is.NoErr(err)
 
 	idGen, err := uuid.NewV4()
@@ -215,7 +215,7 @@ func TestUserExists(t *testing.T) {
 			retVal:    false,
 		},
 		{
-			name:      "incorrent user id provided",
+			name:      "incorrect user id provided",
 			expectErr: true,
 			args:      struct{ id string }{id: "1"},
 			retVal:    false,
@@ -245,7 +245,7 @@ func TestUpdateUser(t *testing.T) {
 	is := is.New(t)
 
 	ctx := context.Background()
-	s, err := postgres.NewWithConnString(connString)
+	s, err := db.NewPostgresDB(connString)
 	is.NoErr(err)
 
 	idGen, err := uuid.NewV4()
