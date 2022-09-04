@@ -31,7 +31,7 @@ type ServerInterface interface {
 	HandleDeleteStoreById(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID)
 	// Upload file
 	// (POST /store/{storeId}/file)
-	HandleDeleteStoreFiles(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID)
+	HandleAddStoreFiles(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID)
 	// Delete file
 	// (DELETE /store/{storeId}/file/{fileId})
 	HandleDeleteStoreFileById(w http.ResponseWriter, r *http.Request, storeId openapi_types.UUID, fileId openapi_types.UUID)
@@ -151,8 +151,8 @@ func (siw *ServerInterfaceWrapper) HandleDeleteStoreById(w http.ResponseWriter, 
 	handler(w, r.WithContext(ctx))
 }
 
-// HandleDeleteStoreFiles operation middleware
-func (siw *ServerInterfaceWrapper) HandleDeleteStoreFiles(w http.ResponseWriter, r *http.Request) {
+// HandleAddStoreFiles operation middleware
+func (siw *ServerInterfaceWrapper) HandleAddStoreFiles(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var err error
@@ -167,7 +167,7 @@ func (siw *ServerInterfaceWrapper) HandleDeleteStoreFiles(w http.ResponseWriter,
 	}
 
 	var handler = func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.HandleDeleteStoreFiles(w, r, storeId)
+		siw.Handler.HandleAddStoreFiles(w, r, storeId)
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -341,7 +341,7 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Delete(options.BaseURL+"/store/{storeId}", wrapper.HandleDeleteStoreById)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/store/{storeId}/file", wrapper.HandleDeleteStoreFiles)
+		r.Post(options.BaseURL+"/store/{storeId}/file", wrapper.HandleAddStoreFiles)
 	})
 	r.Group(func(r chi.Router) {
 		r.Delete(options.BaseURL+"/store/{storeId}/file/{fileId}", wrapper.HandleDeleteStoreFileById)

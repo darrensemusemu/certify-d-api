@@ -49,7 +49,7 @@ func (h *Handler) HandleDeleteStoreById(w http.ResponseWriter, r *http.Request, 
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *Handler) HandleDeleteStoreFiles(w http.ResponseWriter, r *http.Request, storeId types.UUID) {
+func (h *Handler) HandleAddStoreFiles(w http.ResponseWriter, r *http.Request, storeId types.UUID) {
 	w.WriteHeader(http.StatusOK)
 }
 

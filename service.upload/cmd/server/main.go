@@ -49,16 +49,15 @@ func initViper() error {
 		return nil
 	}
 
-	// viper.SetConfigFile("config.yaml")
 	viper.SetConfigName("server-config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("service.upload/config")
 	viper.AddConfigPath("config")
-	err := viper.ReadInConfig()
-	if err != nil {
+	if err := viper.ReadInConfig(); err != nil {
 		return fmt.Errorf("config file: %w", err)
 	}
+
 	return nil
 }
 
@@ -71,27 +70,25 @@ func run(cfg config) error {
 
 	repo, err := db.NewPostgresDB("")
 	defer func() {
-		err := repo.Close()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
-			os.Exit(1)
+		if tempErr := repo.Close(); tempErr != nil {
+			err = tempErr
 		}
 	}()
 	if err != nil {
 		return err
 	}
 
-	st, err := store.NewService(repo)
+	storeSvc, err := store.NewService(repo)
 	if err != nil {
 		return err
 	}
 
-	gs, err := blob.NewGoogleStorage(ctx, viper.GetString("gs_bucket"))
+	gsSvc, err := blob.NewGoogleStorage(ctx, viper.GetString("gs_bucket"))
 	if err != nil {
 		return err
 	}
 
-	restHandler, err := httpUpload.NewHandler(st, gs)
+	restHandler, err := httpUpload.NewHandler(storeSvc, gsSvc)
 	if err != nil {
 		return err
 	}
@@ -119,5 +116,4 @@ func run(cfg config) error {
 		return err
 	}
 	return nil
-
 }
