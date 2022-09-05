@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-url: "http://oathkeeper-api.certify-d-dev.svc.cluster.local:4456/decisions$request_uri"
     nginx.ingress.kubernetes.io/auth-response-headers: "Authorization"
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /api/v1/user/$2
 spec:
   ingressClassName: nginx
   tls:
