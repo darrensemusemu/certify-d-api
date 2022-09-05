@@ -3,10 +3,20 @@ info:
   title: certify-d v1
   version: "1.0"
 servers:
-  - url: https://certify-d.darrensemusemu.dev/api/v1/user
+  - url: '{protocol}://{host}/api/v1/user'
     description: Staging 
-  - url: http://localhost:8080/api/v1
-    description: Development 
+    variables:
+      host:
+        default: certify-d.darrensemusemu.dev
+        enum:
+          - certify-d.darrensemusemu.dev
+      protocol:
+        default: https
+        enum:
+          - http
+          - https
+  - url: http://localhost:8080/api/v1/user
+    description: Development
 tags:
   - name: users
     description: Everything about users

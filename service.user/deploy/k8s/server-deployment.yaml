@@ -43,15 +43,15 @@ spec:
           #   successThreshold: 1
           #   failureThreshold: 3
           #   periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /health/alive
-              port: 8080
-            initialDelaySeconds: 5
-            timeoutSeconds: 2
-            successThreshold: 1
-            failureThreshold: 3
-            periodSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: /api/v1/user/health/alive
+          #     port: 8080
+          #   initialDelaySeconds: 5
+          #   timeoutSeconds: 2
+          #   successThreshold: 1
+          #   failureThreshold: 3
+          #   periodSeconds: 10
           env:
             - name: DB_CONN
               value: "postgres://user_service:user_service@psql-postgresql.certify-d-dev:5432/certify_d"

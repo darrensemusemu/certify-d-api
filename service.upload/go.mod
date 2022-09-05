@@ -3,7 +3,7 @@ module github.com/darrensemusemu/certify-d-api/service.upload
 go 1.18
 
 require (
-	github.com/darrensemusemu/certify-d-api/common v1.4.0
+	github.com/darrensemusemu/certify-d-api/common v0.1.0
 	github.com/deepmap/oapi-codegen v1.11.0
 	github.com/friendsofgo/errors v0.9.2
 	github.com/getkin/kin-openapi v0.100.0
@@ -49,9 +49,6 @@ require (
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	github.com/volatiletech/randomize v0.0.1 // indirect
 	go.opencensus.io v0.23.0 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/multierr v1.8.0 // indirect
-	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e // indirect
 	golang.org/x/oauth2 v0.0.0-20220622183110-fd043fe589d2
 	golang.org/x/sys v0.0.0-20220624220833-87e55d714810 // indirect

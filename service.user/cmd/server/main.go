@@ -98,7 +98,7 @@ func run(cfg config) (err error) {
 	}
 
 	s.RegisterRoutes(func(r chi.Router) http.Handler {
-		r.Mount("/v1", func() http.Handler {
+		r.Mount("/v1/user", func() http.Handler {
 			r.Use(middleware.OapiRequestValidator(swagger))
 			r.Use(jwt.KratosAuthMiddleware)
 			s := api.HandlerFromMux(restHandler, r)
