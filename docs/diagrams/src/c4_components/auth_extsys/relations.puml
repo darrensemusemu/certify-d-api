@@ -1,7 +1,7 @@
 @startuml auth_extsys_relations
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
-' $level =
+' $level = 2
 
 !if ($level == 1)
 
@@ -9,9 +9,9 @@ Rel_R(auth_extsys, certify_sys,  "Fowards identity")
 
 !elseif ($level == 2)
 
-Rel_D(kratos_extcont, kratos_contdb, "Identity management")
-Rel_R(kratos_extcont, user_cont, "Identity management")
-Rel_R(oathkeeper_extcont, kratos_extcont, "Identity access")
+' Rel_D(kratos_extcont, kratos_contdb, "Identity management")
+Rel_D(kratos_extcont, user_cont, "Identity management")
+Rel_D(oathkeeper_extcont, kratos_extcont, "Identity access")
 
 !endif
 

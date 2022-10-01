@@ -6,9 +6,11 @@ title = System Container Diagram for Certify-d
 
 !include c4_core.puml
 
-Lay_D(payment_extsys, sms_extsys)
-Lay_D(payment_extsys, email_extsys)
-Lay_D(sms_extsys, email_extsys)
+' Lay_D(e0, email_extsys)
+' Lay_D(nats_server_cont, email_extsys)
+' Lay_D(nats_sserver_cont, sms_extsys)
+' Lay_D(nats_server_cont, payment_extsys)
+' Lay_D(notifications_cont, payment_extsys)
 
 LAYOUT_WITH_LEGEND()
 @enduml

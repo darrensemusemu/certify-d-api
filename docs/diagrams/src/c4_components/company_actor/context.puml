@@ -1,6 +1,6 @@
 @startuml company_actor_context
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
-Person(company_actor, "Company", "A registered company, with a commissioner of oaths",  $sprite="users")
+Person(company_actor, "Commissioners", "User/group legally authorised to certify documents",  $sprite="users")
 
 @enduml
